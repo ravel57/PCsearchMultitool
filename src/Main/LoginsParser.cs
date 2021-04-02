@@ -15,6 +15,7 @@ namespace pc_finnder.src.Main {
 			public string name;
 			public string firstLog;
 			public string lastLog;
+			public string lastLogType;
 			public int count;
 			public bool loginStatus;
 			public PCinfo(string pcName, string firstLog, string lastLog) {
@@ -23,23 +24,24 @@ namespace pc_finnder.src.Main {
 				this.firstLog = firstLog;
 				this.count = 1;
 				this.loginStatus = false;
+				this.lastLogType = "LogIn";
 			}
 		}
 
 
 		public LoginsParser() { }
-			//if (File.Exists(pathFileName)) {
-			//	path = File.ReadAllLines(pathFileName)[0];
-			//	users.userNames = getUserNames(path);
-			//	if (users == null) {
-			//		MessageBox.Show("В файле path.txt указан неверный путь");
-			//		Environment.Exit(1);
-			//	}
-			//} else {
-			//	MessageBox.Show("Отсутствует path.txt в папке программы");
-			//	//Application.Exit();
-			//	Environment.Exit(1);
-			//}
+		//if (File.Exists(pathFileName)) {
+		//	path = File.ReadAllLines(pathFileName)[0];
+		//	users.userNames = getUserNames(path);
+		//	if (users == null) {
+		//		MessageBox.Show("В файле path.txt указан неверный путь");
+		//		Environment.Exit(1);
+		//	}
+		//} else {
+		//	MessageBox.Show("Отсутствует path.txt в папке программы");
+		//	//Application.Exit();
+		//	Environment.Exit(1);
+		//}
 
 
 		public PCinfo[] ParceUsersComputers(string userName) {
@@ -47,7 +49,8 @@ namespace pc_finnder.src.Main {
 			try {
 				string[] lines = File.ReadAllLines(Utility.configuration.loginsPath + '\\' + userName + "\\login.txt");
 				foreach (string line in lines) {
-					string pcName = line.Substring(23, line.IndexOf(";Log") - 23);
+					int logPosition = line.IndexOf(";Log");
+					string pcName = line.Substring(23, logPosition - 23);
 					if (Array.Exists(pcInfoList.ToArray(), element => element.name == pcName)) {
 						//int numOfCurPC = Array.IndexOf(pcInfoList.ToArray(), pcName);
 						//if(numOfCurPC >= 0) {
@@ -57,17 +60,19 @@ namespace pc_finnder.src.Main {
 								PCinfo tmp = pcInfoList[i];
 								tmp.count++;
 								tmp.lastLog = $"{line.Substring(0, 6)}{line.Substring(8, 2)}\t{line.Substring(11, 5)}";
+								tmp.lastLogType = line.Substring(logPosition + 1, line.IndexOf(';', logPosition + 1) - 1 - logPosition);
 								pcInfoList[i] = tmp;
 								break;
 							}
 						}
 					} else {
 						string date = $"{line.Substring(0, 6)}{line.Substring(8, 2)}\t{line.Substring(11, 5)}";
+						string lastLogType = line.Substring(logPosition+1, line.IndexOf(';', logPosition + 1) - 1 - logPosition);
 						pcInfoList.Add(new PCinfo(pcName, date, date));
 					}
 				}
 			} catch {
-				MessageBox.Show("гЫЫ");
+				MessageBox.Show("Ошибка при парсинге логов");
 			}
 			return pcInfoList.ToArray();
 		}

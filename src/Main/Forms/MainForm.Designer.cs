@@ -39,6 +39,8 @@
 			this.infinitePing_button = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.info_button = new System.Windows.Forms.Button();
+			this.ip_button = new System.Windows.Forms.Button();
+			this.explorer_button = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// PCs_listBox
@@ -46,7 +48,7 @@
 			this.PCs_listBox.FormattingEnabled = true;
 			this.PCs_listBox.Location = new System.Drawing.Point(7, 31);
 			this.PCs_listBox.Name = "PCs_listBox";
-			this.PCs_listBox.Size = new System.Drawing.Size(159, 225);
+			this.PCs_listBox.Size = new System.Drawing.Size(159, 251);
 			this.PCs_listBox.TabIndex = 1;
 			this.PCs_listBox.SelectedIndexChanged += new System.EventHandler(this.PCs_listBox_SelectedIndexChanged);
 			// 
@@ -64,7 +66,7 @@
 			this.copy_button.Location = new System.Drawing.Point(172, 196);
 			this.copy_button.Name = "copy_button";
 			this.copy_button.Size = new System.Drawing.Size(187, 25);
-			this.copy_button.TabIndex = 4;
+			this.copy_button.TabIndex = 5;
 			this.copy_button.Text = "В БУФЕР ОБМАНА";
 			this.copy_button.UseVisualStyleBackColor = true;
 			this.copy_button.Click += new System.EventHandler(this.copy_button_Click);
@@ -109,28 +111,32 @@
 			// 
 			// PCinfo_textBox
 			// 
+			this.PCinfo_textBox.BackColor = System.Drawing.SystemColors.Window;
 			this.PCinfo_textBox.Location = new System.Drawing.Point(237, 31);
 			this.PCinfo_textBox.Multiline = true;
 			this.PCinfo_textBox.Name = "PCinfo_textBox";
+			this.PCinfo_textBox.ReadOnly = true;
 			this.PCinfo_textBox.Size = new System.Drawing.Size(122, 66);
 			this.PCinfo_textBox.TabIndex = 0;
 			this.PCinfo_textBox.TabStop = false;
 			// 
 			// ping_button
 			// 
-			this.ping_button.Location = new System.Drawing.Point(172, 227);
+			this.ping_button.Location = new System.Drawing.Point(172, 256);
 			this.ping_button.Name = "ping_button";
-			this.ping_button.Size = new System.Drawing.Size(162, 23);
-			this.ping_button.TabIndex = 5;
-			this.ping_button.Text = "        ПИНГАНУТЬ";
+			this.ping_button.Size = new System.Drawing.Size(136, 23);
+			this.ping_button.TabIndex = 6;
+			this.ping_button.Text = "                 PING";
 			this.ping_button.UseVisualStyleBackColor = true;
 			this.ping_button.Click += new System.EventHandler(this.ping_button_Click);
 			// 
 			// sub_textBox
 			// 
+			this.sub_textBox.BackColor = System.Drawing.SystemColors.Window;
 			this.sub_textBox.Location = new System.Drawing.Point(172, 31);
 			this.sub_textBox.Multiline = true;
 			this.sub_textBox.Name = "sub_textBox";
+			this.sub_textBox.ReadOnly = true;
 			this.sub_textBox.Size = new System.Drawing.Size(66, 66);
 			this.sub_textBox.TabIndex = 0;
 			this.sub_textBox.TabStop = false;
@@ -141,7 +147,7 @@
 			this.sortPCnamesMethod_button.Location = new System.Drawing.Point(336, 3);
 			this.sortPCnamesMethod_button.Name = "sortPCnamesMethod_button";
 			this.sortPCnamesMethod_button.Size = new System.Drawing.Size(23, 23);
-			this.sortPCnamesMethod_button.TabIndex = 7;
+			this.sortPCnamesMethod_button.TabIndex = 9;
 			this.sortPCnamesMethod_button.Text = "DATA";
 			this.sortBatton_toolTip.SetToolTip(this.sortPCnamesMethod_button, "Выбрана сортировка по ДАТЕ");
 			this.sortPCnamesMethod_button.UseVisualStyleBackColor = true;
@@ -154,11 +160,11 @@
 			// infinitePing_button
 			// 
 			this.infinitePing_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.infinitePing_button.Location = new System.Drawing.Point(336, 227);
+			this.infinitePing_button.Location = new System.Drawing.Point(307, 256);
 			this.infinitePing_button.Margin = new System.Windows.Forms.Padding(1);
 			this.infinitePing_button.Name = "infinitePing_button";
 			this.infinitePing_button.Size = new System.Drawing.Size(23, 23);
-			this.infinitePing_button.TabIndex = 6;
+			this.infinitePing_button.TabIndex = 7;
 			this.infinitePing_button.Text = "/t";
 			this.infinitePing_button.UseVisualStyleBackColor = true;
 			this.infinitePing_button.Click += new System.EventHandler(this.infinitePing_button_Click);
@@ -167,28 +173,51 @@
 			// 
 			this.label2.AutoSize = true;
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label2.Location = new System.Drawing.Point(336, 251);
+			this.label2.Location = new System.Drawing.Point(341, 280);
 			this.label2.Margin = new System.Windows.Forms.Padding(0);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(28, 7);
+			this.label2.Size = new System.Drawing.Size(22, 7);
 			this.label2.TabIndex = 8;
-			this.label2.Text = "v. 1.3 b";
+			this.label2.Text = "v. 1.3";
 			// 
 			// info_button
 			// 
 			this.info_button.Location = new System.Drawing.Point(172, 165);
 			this.info_button.Name = "info_button";
 			this.info_button.Size = new System.Drawing.Size(187, 25);
-			this.info_button.TabIndex = 3;
+			this.info_button.TabIndex = 4;
 			this.info_button.Text = "ИНФО";
 			this.info_button.UseVisualStyleBackColor = true;
 			this.info_button.Click += new System.EventHandler(this.info_button_Click);
+			// 
+			// ip_button
+			// 
+			this.ip_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.ip_button.Location = new System.Drawing.Point(332, 256);
+			this.ip_button.Margin = new System.Windows.Forms.Padding(1);
+			this.ip_button.Name = "ip_button";
+			this.ip_button.Size = new System.Drawing.Size(27, 23);
+			this.ip_button.TabIndex = 8;
+			this.ip_button.Text = "IP";
+			this.ip_button.UseVisualStyleBackColor = true;
+			this.ip_button.Click += new System.EventHandler(this.ip_button_Click);
+			// 
+			// explorer_button
+			// 
+			this.explorer_button.Location = new System.Drawing.Point(172, 227);
+			this.explorer_button.Name = "explorer_button";
+			this.explorer_button.Size = new System.Drawing.Size(187, 25);
+			this.explorer_button.TabIndex = 5;
+			this.explorer_button.Text = "ПРОВОДНИК";
+			this.explorer_button.UseVisualStyleBackColor = true;
+			this.explorer_button.Click += new System.EventHandler(this.explorer_button_Click);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.AutoScroll = true;
-			this.ClientSize = new System.Drawing.Size(366, 263);
+			this.ClientSize = new System.Drawing.Size(366, 292);
+			this.Controls.Add(this.ip_button);
 			this.Controls.Add(this.infinitePing_button);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.sortPCnamesMethod_button);
@@ -199,6 +228,7 @@
 			this.Controls.Add(this.info_button);
 			this.Controls.Add(this.openRDP_button);
 			this.Controls.Add(this.openAsist_button);
+			this.Controls.Add(this.explorer_button);
 			this.Controls.Add(this.copy_button);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.PCs_listBox);
@@ -229,6 +259,8 @@
 		public System.Windows.Forms.ListBox PCs_listBox;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button info_button;
+		private System.Windows.Forms.Button ip_button;
+		private System.Windows.Forms.Button explorer_button;
 	}
 }
 

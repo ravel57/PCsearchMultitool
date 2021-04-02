@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,7 +26,7 @@ namespace pc_finnder.src.Main {
 
 
 		public void GetComputerInfo(string pcName) {
-			if (pcName != null) {
+			if (pcName != null & Utility.configuration.inventoryPath != String.Empty) {
 				string[] founfComputers = Directory.GetFiles(Utility.configuration.inventoryPath, pcName + '*', SearchOption.AllDirectories);
 				if (founfComputers.Length == 1)
 					Utility.execProcess(founfComputers[0]);
@@ -39,19 +41,23 @@ namespace pc_finnder.src.Main {
 			string data = "fff";
 			byte[] buffer = Encoding.ASCII.GetBytes(data);
 			try {
-				return (ping.Send(pcName, 120, buffer, pingOptions).Status == IPStatus.Success) ? true : false;
+				return (ping.Send(pcName, 120, buffer, pingOptions).Status == IPStatus.Success);
 			} catch (System.Net.NetworkInformation.PingException) {
 				return false;
 			}
 		}
 
 
-		public void pingResalt(string pcName) {
+		public async void pingResalt(string pcName) {
 			if (pcName != null) {
 				if (ping(pcName))
-					MessageBox.Show("Пингуется", @"¯\_(ツ)_/¯", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					await Task.Run(() => {
+						MessageBox.Show("Пингуется", pcName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+					});
 				else
-					MessageBox.Show("НЕ пингуется", @"¯\_(ツ)_/¯", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					await Task.Run(() => {
+						MessageBox.Show("НЕ пингуется", pcName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+					});
 				//try {
 				//	PingReply reply = ping.Send(pcName, 120, buffer, pingOptions);
 				//	if (reply.Status == IPStatus.Success)
@@ -75,7 +81,8 @@ namespace pc_finnder.src.Main {
 							string userAccount = session.UserAccount.Value;
 							//if (session.UserAccount.Value.ToLower().Contains(username.ToLower())
 							if (userAccount.ToLower().Remove(0, userAccount.IndexOf("\\") + 1) == username.ToLower()
-								& session.ConnectionState == Cassia.ConnectionState.Active) {
+									& session.ConnectionState == Cassia.ConnectionState.Active
+								) {
 								return true;
 							}
 						}
@@ -85,6 +92,27 @@ namespace pc_finnder.src.Main {
 				//MessageBox.Show(e.Message);
 			}
 			return false;
+		}
+
+		public async void getIpByHostname(string pcName) {
+			if (pcName != String.Empty)
+				if (ping(pcName)) {
+					IPAddress[] iPAddresses = Dns.GetHostAddresses(pcName);
+					foreach (IPAddress ip in iPAddresses)
+						if (ip.AddressFamily == AddressFamily.InterNetwork & iPAddresses.Length > 0) {
+							Clipboard.SetText(ip.ToString());
+							await Task.Run(() => { 
+								MessageBox.Show(ip.ToString() + "\n[ скопированно ]", pcName); 
+							});
+						}
+				}
+		}
+
+		public async void openComputerInExplorer(string computerName) {
+			if (computerName != String.Empty)
+				await Task.Run(() => {
+					Utility.execProcess("explorer.exe \\\\" + computerName + "\\c$");
+				});
 		}
 	}
 }

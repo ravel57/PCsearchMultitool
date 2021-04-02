@@ -25,7 +25,7 @@ namespace pc_finnder.src.Main {
 						using (ITerminalServer server = manager.GetRemoteServer(selectedUserPCs[i].name)) {
 							server.Open();
 							foreach (ITerminalServicesSession session in server.GetSessions()) {
-								if (session.UserName.ToLower() == selectedUser.ToLower() && session.ConnectionState.ToString() == "Active")
+								if (session.UserName.ToLower() == selectedUser.ToLower() && session.ConnectionState == ConnectionState.Active)
 									selectedUserPCs[i].name = "->" + selectedUserPCs[i].name + "<-";
 							}
 						}

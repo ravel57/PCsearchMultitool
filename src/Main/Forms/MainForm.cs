@@ -19,7 +19,7 @@ namespace pc_finnder {
 		AdminTools adminTools = new AdminTools();
 
 		private string selectedUser;
-		LoginsParser.PCinfo[] PCsOfSelectedUser;
+		LoginsParser.PCinfo[] computersOfSelectedUser;
 		LoginsParser.PCinfo selectedPCinfo;
 		enum sortBy { DATA = 0, LOGS = 1 };
 		sortBy selectedSortingMethod = sortBy.DATA;
@@ -78,7 +78,7 @@ namespace pc_finnder {
 
 				// Background Color	
 				SolidBrush backgroundColorBrush;
-				if (!PCsOfSelectedUser.First(pc => pc.name == itemText).loginStatus)
+				if (!computersOfSelectedUser.First(pc => pc.name == itemText).loginStatus)
 					backgroundColorBrush = new SolidBrush((isItemSelected) ? Color.Transparent : Color.White);
 				else
 					backgroundColorBrush = new SolidBrush((isItemSelected) ? Color.Red : Color.White);
@@ -86,7 +86,7 @@ namespace pc_finnder {
 
 				// Set text color
 				SolidBrush itemTextColorBrush;
-				if (!PCsOfSelectedUser.First(pc => pc.name == itemText).loginStatus)
+				if (!computersOfSelectedUser.First(pc => pc.name == itemText).loginStatus)
 					itemTextColorBrush = (isItemSelected) ? new SolidBrush(Color.White) : new SolidBrush(Color.Black);
 				else
 					itemTextColorBrush = (isItemSelected) ? new SolidBrush(Color.White) : new SolidBrush(Color.Red);
@@ -123,7 +123,7 @@ namespace pc_finnder {
 				this.PCs_listBox.DataSource = null;
 				this.PCinfo_textBox.Clear();
 				//this.PCsOfSelectedUser = null;
-				this.PCsOfSelectedUser = new LoginsParser.PCinfo[0];
+				this.computersOfSelectedUser = new LoginsParser.PCinfo[0];
 				this.userName_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
 				this.userName_comboBox.Text = "";
 			}
@@ -139,19 +139,27 @@ namespace pc_finnder {
 				this.userName_comboBox.SelectedItem = 0;
 
 			/*ParseLogins.PCinfo[]*/
-			PCsOfSelectedUser = loginsParser.ParceUsersComputers(selectedUser);
+			computersOfSelectedUser = loginsParser.ParceUsersComputers(selectedUser);
 			switch (selectedSortingMethod) {
-				case sortBy.LOGS:
-					Array.Sort<LoginsParser.PCinfo>(PCsOfSelectedUser, (x, y) => y.count.CompareTo(x.count));
-					break;
-				case sortBy.DATA:
-					Array.Sort<LoginsParser.PCinfo>(PCsOfSelectedUser, (x, y) => ((y.lastLog.Substring(6, 2) + y.lastLog.Substring(3, 2) + y.lastLog.Substring(0, 2))
-																	.CompareTo(
-																	(x.lastLog.Substring(6, 2) + x.lastLog.Substring(3, 2) + x.lastLog.Substring(0, 2)))
-					));
-					break;
+				case sortBy.LOGS: {
+						Array.Sort<LoginsParser.PCinfo>(computersOfSelectedUser, (x, y) => y.count.CompareTo(x.count));
+						break;
+					}
+				case sortBy.DATA: {
+						Array.Sort<LoginsParser.PCinfo>(computersOfSelectedUser, (x, y) => (
+							Convert.ToDateTime(y.lastLog.Substring(0, 14))
+							//		(y.lastLog.Substring(6, 2) + y.lastLog.Substring(3, 2) + y.lastLog.Substring(0, 2)
+							//		+ y.lastLog.Substring(9, 2) + y.lastLog.Substring(12, 2))
+							.CompareTo(
+								Convert.ToDateTime(x.lastLog.Substring(0, 14))
+							//		(x.lastLog.Substring(6, 2) + x.lastLog.Substring(3, 2) + x.lastLog.Substring(0, 2)
+							//		+ x.lastLog.Substring(9, 2)) + x.lastLog.Substring(12, 2)
+							)
+						));
+						break;
+					}
 			}
-			List<string> sortedPcNames = loginsParser.getPcNames(PCsOfSelectedUser);
+			List<string> sortedPcNames = loginsParser.getPcNames(computersOfSelectedUser);
 
 			this.PCs_listBox.DataSource = sortedPcNames;
 			//this.PCs_listBox.Items.Clear(); this.PCs_listBox.Items.AddRange(sortedPcNames.ToArray());
@@ -170,14 +178,14 @@ namespace pc_finnder {
 			//}
 
 			//List<string> pcs = new List<string>();
-			for (int i = 0; i < PCsOfSelectedUser.Length; i++) {
+			for (int i = 0; i < computersOfSelectedUser.Length; i++) {
 				//if (PCsOfSelectedUser[i].lastLog.Substring(7,8))
-				DateTime dt = DateTime.ParseExact(PCsOfSelectedUser[i].lastLog.Substring(0, 8), "dd.MM.yy", CultureInfo.InvariantCulture);
+				DateTime dt = DateTime.ParseExact(computersOfSelectedUser[i].lastLog.Substring(0, 8), "dd.MM.yy", CultureInfo.InvariantCulture);
 				//MessageBox.Show(dt.AddMonths(4).ToString());
 				if (dt.AddMonths(4) >= DateTime.Now)
 					//await Task.Run(() => PCsOfSelectedUser[i].loginStatus = adminTools.checkUserLogedIn(selectedUser, PCsOfSelectedUser[i].name));
-					if (await Task.Run(() => adminTools.checkUserLogedIn(selectedUser, PCsOfSelectedUser[i].name))) {
-						PCsOfSelectedUser[i].loginStatus = true;
+					if (await Task.Run(() => adminTools.checkUserLogedIn(selectedUser, computersOfSelectedUser[i].name))) {
+						computersOfSelectedUser[i].loginStatus = true;
 						this.PCs_listBox.Refresh();
 						//pcs.Add(PCsOfSelectedUser[i].name);
 					}
@@ -230,8 +238,13 @@ namespace pc_finnder {
 
 		private void PCs_listBox_SelectedIndexChanged(object sender, EventArgs e) {
 			try {
-				LoginsParser.PCinfo selectedPC = PCsOfSelectedUser.First(pc => pc.name == this.PCs_listBox.GetItemText(this.PCs_listBox.SelectedItem));
-				this.PCinfo_textBox.Lines = new string[4] { selectedPC.name, selectedPC.count.ToString(), selectedPC.firstLog, selectedPC.lastLog };
+				LoginsParser.PCinfo selectedPC = computersOfSelectedUser.First(pc => pc.name == this.PCs_listBox.GetItemText(this.PCs_listBox.SelectedItem));
+				this.PCinfo_textBox.Lines = new string[4] {
+					selectedPC.name,
+					selectedPC.count.ToString(),
+					selectedPC.firstLog,
+					selectedPC.lastLog + " [" + selectedPC.lastLogType + "]"
+				};
 				selectedPCinfo = selectedPC;
 			} catch { }
 		}
@@ -253,7 +266,12 @@ namespace pc_finnder {
 		}
 
 		private void copy_button_Click(object sender, EventArgs e) {
-			Clipboard.SetText(selectedPCinfo.name);
+			if (selectedPCinfo.name != String.Empty)
+				Clipboard.SetText(selectedPCinfo.name);
+		}
+
+		private void explorer_button_Click(object sender, EventArgs e) {
+			adminTools.openComputerInExplorer(selectedPCinfo.name);
 		}
 
 		private void ping_button_Click(object sender, EventArgs e) {
@@ -266,6 +284,10 @@ namespace pc_finnder {
 					Application.Run(new InfinitePing_Form(selectedPCinfo.name));
 				});
 			}
+		}
+
+		private void ip_button_Click(object sender, EventArgs e) {
+			adminTools.getIpByHostname(selectedPCinfo.name);
 		}
 
 	}
