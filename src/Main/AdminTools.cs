@@ -95,7 +95,7 @@ namespace pc_finnder.src.Main {
 		}
 
 		public async void getIpByHostname(string pcName) {
-			if (pcName != String.Empty)
+			if (pcName != null)
 				if (ping(pcName)) {
 					IPAddress[] iPAddresses = Dns.GetHostAddresses(pcName);
 					foreach (IPAddress ip in iPAddresses)
@@ -109,7 +109,7 @@ namespace pc_finnder.src.Main {
 		}
 
 		public async void openComputerInExplorer(string computerName) {
-			if (computerName != String.Empty)
+			if (computerName != null)
 				await Task.Run(() => {
 					Utility.execProcess("explorer.exe \\\\" + computerName + "\\c$");
 				});

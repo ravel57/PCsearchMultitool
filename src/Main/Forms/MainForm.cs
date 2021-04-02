@@ -54,6 +54,7 @@ namespace pc_finnder {
 				if (Utility.DEBUG_MESSAGES) { MessageBox.Show("runned local"); }
 				Utility.run();
 				Users.updateUsersNames();
+				this.version_label.Text = Utility.VERSION;
 			}
 			//redraw listbox to select active computer
 			this.PCs_listBox.DrawMode = DrawMode.OwnerDrawVariable;
@@ -126,6 +127,7 @@ namespace pc_finnder {
 				this.computersOfSelectedUser = new LoginsParser.PCinfo[0];
 				this.userName_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
 				this.userName_comboBox.Text = "";
+				this.selectedPCinfo = new LoginsParser.PCinfo();
 			}
 			//чтобы курсор не падал за список и был виден
 			Cursor.Current = Cursors.Default;
@@ -266,7 +268,7 @@ namespace pc_finnder {
 		}
 
 		private void copy_button_Click(object sender, EventArgs e) {
-			if (selectedPCinfo.name != String.Empty)
+			if (selectedPCinfo.name != null)
 				Clipboard.SetText(selectedPCinfo.name);
 		}
 

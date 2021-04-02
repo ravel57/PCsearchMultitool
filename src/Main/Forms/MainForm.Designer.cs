@@ -37,7 +37,7 @@
 			this.sortPCnamesMethod_button = new System.Windows.Forms.Button();
 			this.sortBatton_toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.infinitePing_button = new System.Windows.Forms.Button();
-			this.label2 = new System.Windows.Forms.Label();
+			this.version_label = new System.Windows.Forms.Label();
 			this.info_button = new System.Windows.Forms.Button();
 			this.ip_button = new System.Windows.Forms.Button();
 			this.explorer_button = new System.Windows.Forms.Button();
@@ -169,16 +169,15 @@
 			this.infinitePing_button.UseVisualStyleBackColor = true;
 			this.infinitePing_button.Click += new System.EventHandler(this.infinitePing_button_Click);
 			// 
-			// label2
+			// version_label
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label2.Location = new System.Drawing.Point(341, 280);
-			this.label2.Margin = new System.Windows.Forms.Padding(0);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(22, 7);
-			this.label2.TabIndex = 8;
-			this.label2.Text = "v. 1.3";
+			this.version_label.AutoSize = true;
+			this.version_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.version_label.Location = new System.Drawing.Point(346, 280);
+			this.version_label.Margin = new System.Windows.Forms.Padding(0);
+			this.version_label.Name = "version_label";
+			this.version_label.Size = new System.Drawing.Size(0, 7);
+			this.version_label.TabIndex = 8;
 			// 
 			// info_button
 			// 
@@ -219,7 +218,7 @@
 			this.ClientSize = new System.Drawing.Size(366, 292);
 			this.Controls.Add(this.ip_button);
 			this.Controls.Add(this.infinitePing_button);
-			this.Controls.Add(this.label2);
+			this.Controls.Add(this.version_label);
 			this.Controls.Add(this.sortPCnamesMethod_button);
 			this.Controls.Add(this.ping_button);
 			this.Controls.Add(this.sub_textBox);
@@ -257,7 +256,7 @@
 		private System.Windows.Forms.ToolTip sortBatton_toolTip;
 		private System.Windows.Forms.Button infinitePing_button;
 		public System.Windows.Forms.ListBox PCs_listBox;
-		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label version_label;
 		private System.Windows.Forms.Button info_button;
 		private System.Windows.Forms.Button ip_button;
 		private System.Windows.Forms.Button explorer_button;
