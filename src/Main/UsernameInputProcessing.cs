@@ -23,7 +23,7 @@ namespace pc_finnder.src.Main {
 			char[] rusAlphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н',
 				'о', 'п', 'р', 'с','т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'};
 			string[][] engAlphabet = new string[33][] {
-				new[] {"a"}, new[] {"b"}, new[] {"v",}, new[] {"g"}, new[] {"d"}, new[] {"e"}, new[] {"e", "yo"}, new[] {"zh", "j" },
+				new[] {"a"}, new[] {"b"}, new[] {"v", "w"}, new[] {"g"}, new[] {"d"}, new[] {"e"}, new[] {"e", "yo"}, new[] {"zh", "j" },
 				new[] {"z"}, new[] {"i"}, new[] {"y", "i"}, new[] {"k"}, new[] {"l"}, new[] {"m"}, new[] {"n"}, new[] {"o"}, new[] {"p"},
 				new[] {"r"}, new[] {"s"}, new[] {"t"}, new[] {"u"}, new[] {"f"}, new[] {"h"}, new[] {"c", "tc", "ts"}, new[] {"ch"}, new[] {"sh"},
 				new[] {"sh"}, new[] {""}, new[] {"i", "y"}, new[] {""}, new[] {"e"}, new[] {"u", "j", "yu", "y" }, new[] {"ya"}

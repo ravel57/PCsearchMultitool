@@ -13,7 +13,7 @@ namespace pc_finnder.src.Main {
 
 		public static bool RUN_FROM_APPDATA = true;
 		public static bool DEBUG_MESSAGES = false;
-		public static string VERSION = "1.4";
+		public static string VERSION = "1.5 beta";
 		public class Configuration {
 			public string loginsPath; //{ get; set;} 
 			public string inventoryPath; //{ get; set;} 

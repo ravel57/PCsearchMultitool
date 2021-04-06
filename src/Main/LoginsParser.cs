@@ -18,13 +18,15 @@ namespace pc_finnder.src.Main {
 			public string lastLogType;
 			public int count;
 			public bool loginStatus;
-			public PCinfo(string pcName, string firstLog, string lastLog) {
-				this.name = pcName;
+			public string assisting;
+			public PCinfo(string name, string firstLog, string lastLog) {
+				this.name = name;
 				this.lastLog = lastLog;
 				this.firstLog = firstLog;
 				this.count = 1;
 				this.loginStatus = false;
 				this.lastLogType = "LogIn";
+				this.assisting = "";
 			}
 		}
 

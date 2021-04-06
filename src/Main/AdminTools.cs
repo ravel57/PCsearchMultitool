@@ -9,6 +9,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace pc_finnder.src.Main {
 	class AdminTools {
@@ -94,6 +96,24 @@ namespace pc_finnder.src.Main {
 			return false;
 		}
 
+		public string checkAsistentConnected(string computerName) {
+			try {
+				if (ping(computerName)) {
+					foreach (Process proces in Process.GetProcessesByName("msra", computerName)) {
+						string s = proces.MainWindowTitle;
+						int a = s.IndexOf("вам помогает ")+13;
+						if (a == 12)
+							continue;
+						string ss = s.Substring(a);
+						int b = ss.IndexOf(" ");
+						string sss = s.Substring(a, b);
+						return sss;
+					}
+				} //else MessageBox.Show($"{computerName} don't ping");
+			} catch { }
+			return "";
+		}
+
 		public async void getIpByHostname(string pcName) {
 			if (pcName != null)
 				if (ping(pcName)) {
@@ -101,8 +121,8 @@ namespace pc_finnder.src.Main {
 					foreach (IPAddress ip in iPAddresses)
 						if (ip.AddressFamily == AddressFamily.InterNetwork & iPAddresses.Length > 0) {
 							Clipboard.SetText(ip.ToString());
-							await Task.Run(() => { 
-								MessageBox.Show(ip.ToString() + "\n[ скопированно ]", pcName); 
+							await Task.Run(() => {
+								MessageBox.Show(ip.ToString() + "\n[ скопированно ]", pcName);
 							});
 						}
 				}

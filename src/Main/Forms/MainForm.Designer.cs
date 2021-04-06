@@ -26,7 +26,7 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.PCs_listBox = new System.Windows.Forms.ListBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.searchType_label = new System.Windows.Forms.Label();
 			this.copy_button = new System.Windows.Forms.Button();
 			this.openAsist_button = new System.Windows.Forms.Button();
 			this.openRDP_button = new System.Windows.Forms.Button();
@@ -51,15 +51,17 @@
 			this.PCs_listBox.Size = new System.Drawing.Size(159, 251);
 			this.PCs_listBox.TabIndex = 1;
 			this.PCs_listBox.SelectedIndexChanged += new System.EventHandler(this.PCs_listBox_SelectedIndexChanged);
+			this.PCs_listBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.PCs_listBox_DoubleClick);
 			// 
-			// label1
+			// searchType_label
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(4, 7);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(106, 13);
-			this.label1.TabIndex = 1;
-			this.label1.Text = "Имя пользователя:";
+			this.searchType_label.AutoSize = true;
+			this.searchType_label.Location = new System.Drawing.Point(4, 7);
+			this.searchType_label.Name = "searchType_label";
+			this.searchType_label.Size = new System.Drawing.Size(106, 13);
+			this.searchType_label.TabIndex = 1;
+			this.searchType_label.Text = "Имя пользователя:";
+			this.searchType_label.Click += new System.EventHandler(this.searchType_label_Click);
 			// 
 			// copy_button
 			// 
@@ -125,7 +127,7 @@
 			this.ping_button.Location = new System.Drawing.Point(172, 256);
 			this.ping_button.Name = "ping_button";
 			this.ping_button.Size = new System.Drawing.Size(136, 23);
-			this.ping_button.TabIndex = 6;
+			this.ping_button.TabIndex = 7;
 			this.ping_button.Text = "                 PING";
 			this.ping_button.UseVisualStyleBackColor = true;
 			this.ping_button.Click += new System.EventHandler(this.ping_button_Click);
@@ -147,7 +149,7 @@
 			this.sortPCnamesMethod_button.Location = new System.Drawing.Point(336, 3);
 			this.sortPCnamesMethod_button.Name = "sortPCnamesMethod_button";
 			this.sortPCnamesMethod_button.Size = new System.Drawing.Size(23, 23);
-			this.sortPCnamesMethod_button.TabIndex = 9;
+			this.sortPCnamesMethod_button.TabIndex = 10;
 			this.sortPCnamesMethod_button.Text = "DATA";
 			this.sortBatton_toolTip.SetToolTip(this.sortPCnamesMethod_button, "Выбрана сортировка по ДАТЕ");
 			this.sortPCnamesMethod_button.UseVisualStyleBackColor = true;
@@ -164,7 +166,7 @@
 			this.infinitePing_button.Margin = new System.Windows.Forms.Padding(1);
 			this.infinitePing_button.Name = "infinitePing_button";
 			this.infinitePing_button.Size = new System.Drawing.Size(23, 23);
-			this.infinitePing_button.TabIndex = 7;
+			this.infinitePing_button.TabIndex = 8;
 			this.infinitePing_button.Text = "/t";
 			this.infinitePing_button.UseVisualStyleBackColor = true;
 			this.infinitePing_button.Click += new System.EventHandler(this.infinitePing_button_Click);
@@ -172,11 +174,11 @@
 			// version_label
 			// 
 			this.version_label.AutoSize = true;
-			this.version_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.version_label.Location = new System.Drawing.Point(346, 280);
+			this.version_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.version_label.Location = new System.Drawing.Point(328, 279);
 			this.version_label.Margin = new System.Windows.Forms.Padding(0);
 			this.version_label.Name = "version_label";
-			this.version_label.Size = new System.Drawing.Size(0, 7);
+			this.version_label.Size = new System.Drawing.Size(0, 9);
 			this.version_label.TabIndex = 8;
 			// 
 			// info_button
@@ -196,7 +198,7 @@
 			this.ip_button.Margin = new System.Windows.Forms.Padding(1);
 			this.ip_button.Name = "ip_button";
 			this.ip_button.Size = new System.Drawing.Size(27, 23);
-			this.ip_button.TabIndex = 8;
+			this.ip_button.TabIndex = 9;
 			this.ip_button.Text = "IP";
 			this.ip_button.UseVisualStyleBackColor = true;
 			this.ip_button.Click += new System.EventHandler(this.ip_button_Click);
@@ -206,7 +208,7 @@
 			this.explorer_button.Location = new System.Drawing.Point(172, 227);
 			this.explorer_button.Name = "explorer_button";
 			this.explorer_button.Size = new System.Drawing.Size(187, 25);
-			this.explorer_button.TabIndex = 5;
+			this.explorer_button.TabIndex = 6;
 			this.explorer_button.Text = "ПРОВОДНИК";
 			this.explorer_button.UseVisualStyleBackColor = true;
 			this.explorer_button.Click += new System.EventHandler(this.explorer_button_Click);
@@ -215,7 +217,7 @@
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.AutoScroll = true;
-			this.ClientSize = new System.Drawing.Size(366, 292);
+			this.ClientSize = new System.Drawing.Size(366, 293);
 			this.Controls.Add(this.ip_button);
 			this.Controls.Add(this.infinitePing_button);
 			this.Controls.Add(this.version_label);
@@ -229,7 +231,7 @@
 			this.Controls.Add(this.openAsist_button);
 			this.Controls.Add(this.explorer_button);
 			this.Controls.Add(this.copy_button);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this.searchType_label);
 			this.Controls.Add(this.PCs_listBox);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -238,13 +240,14 @@
 			this.Text = "rPcsmt";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Closing);
 			this.Load += new System.EventHandler(this.MainForm_Load);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
 		}
 
 		#endregion
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label searchType_label;
 		private System.Windows.Forms.Button copy_button;
 		private System.Windows.Forms.Button openAsist_button;
 		private System.Windows.Forms.Button openRDP_button;
