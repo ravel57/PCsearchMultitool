@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace pc_finnder.src.Main {
 	static class Utility {
 
-		public static bool RUN_FROM_APPDATA = false;
+		public static bool RUN_FROM_APPDATA = true;
 		public static string VERSION = "1.5";
 		public class Configuration {
 			public string loginsPath; //{ get; set;} 
