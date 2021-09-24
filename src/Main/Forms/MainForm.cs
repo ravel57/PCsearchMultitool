@@ -11,6 +11,7 @@ using Cassia;
 using pc_finnder.src.Main;
 using System.Globalization;
 using System.Reflection;
+using System.Diagnostics;
 //using System.Linq;
 
 namespace pc_finnder {
@@ -40,19 +41,9 @@ namespace pc_finnder {
 
 		//on load
 		private async void MainForm_Load(object sender, EventArgs e) {
-			if (Utility.DEBUG_MESSAGES) {
-				MessageBox.Show("current path: " + Directory.GetCurrentDirectory()
-				   + "\nappdata path: " + Utility.APPDATA_PATH
-				   + "\ncurrent path == appdata path: " + String.Equals(Directory.GetCurrentDirectory(), Utility.APPDATA_PATH)
-				   + "\nRUN_FROM_APPDATA: " + Utility.RUN_FROM_APPDATA,
-				   "new start"
-				);
-			}
 			if (Directory.GetCurrentDirectory() != Utility.APPDATA_PATH & Utility.RUN_FROM_APPDATA) {
-				if (Utility.DEBUG_MESSAGES) { MessageBox.Show("running local"); }
 				Utility.RunLocal();
 			} else {
-				if (Utility.DEBUG_MESSAGES) { MessageBox.Show("runned local"); }
 				Utility.run();
 				//window position 
 				this.Location = Utility.settings.windowCord;
@@ -62,6 +53,16 @@ namespace pc_finnder {
 				this.PCs_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
 				this.version_label.Text = Utility.VERSION;
 				this.info_button.Enabled = (Directory.Exists(Utility.configuration.inventoryPath));
+				this.printerInfo_button.Enabled = (Directory.Exists(Utility.configuration.inventoryPath));
+
+				//[DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
+				//Process[] processes = Process.GetProcessesByName("explorer");
+				//WindowScrape.Types.HwndObject hwnd;
+				//foreach (var process in processes) {
+				//	SetWindowPos(handle, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_SHOWWINDOW);
+				//	IntPtr handle = process.MainWindowHandle;
+				//	hwnd = new WindowScrape.Types.HwndObject(handle);
+				//}
 				await Task.Run(async () => {
 					while (true) {
 						Users.updateUsersNames();
@@ -271,7 +272,7 @@ namespace pc_finnder {
 		}
 
 
-		private void PCs_listBox_SelectedIndexChanged(object sender, EventArgs e) {
+		private async void PCs_listBox_SelectedIndexChanged(object sender, EventArgs e) {
 			try {
 				if (this.userName_comboBox.Text != "\u007f" & this.userName_comboBox.Text != "") {
 					LoginsParser.PCinfo selectedPC = computersOfSelectedUser.First(pc =>
@@ -284,6 +285,8 @@ namespace pc_finnder {
 					selectedPC.lastLog + " [" + selectedPC.lastLogType + "]"
 				};
 					selectedComputerinfo = selectedPC;
+					this.explorer_button.Enabled = false;
+					this.explorer_button.Enabled = await Task.Run(() =>  Directory.Exists("\\\\" + selectedPC.name + "\\c$\\") );
 				}
 			} catch (Exception) { }
 		}
@@ -325,6 +328,10 @@ namespace pc_finnder {
 			}
 		}
 
+		private void printerInfo_button_Click(object sender, EventArgs e) {
+			adminTools.GetPrintersInfo(selectedComputerinfo.name);
+		}
+
 		private void ip_button_Click(object sender, EventArgs e) {
 			adminTools.getIpByHostname(selectedComputerinfo.name);
 		}
@@ -334,9 +341,9 @@ namespace pc_finnder {
 		}
 
 		private void PCs_listBox_DoubleClick(object sender, MouseEventArgs e) {
-			try {
-				this.userName_comboBox.Text = (sender as ListBox).SelectedItem.ToString();
-			} catch (NullReferenceException) { }
+			//try {
+			//	this.userName_comboBox.Text = (sender as ListBox).SelectedItem.ToString();
+			//} catch (NullReferenceException) { }
 		}
 	}
 }

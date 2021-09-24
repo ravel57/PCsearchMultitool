@@ -35,6 +35,16 @@ namespace pc_finnder.src.Main {
 			}
 		}
 
+
+		public void GetPrintersInfo(string computerName) {
+			if (computerName != null & Utility.configuration.inventoryPath != String.Empty) {
+				string[] founfComputers = Directory.GetFiles(Utility.configuration.inventoryPath, computerName + '*', SearchOption.AllDirectories);
+				if (founfComputers.Length == 1) {
+					Utility.execProcess("\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" file:" + founfComputers[0].Replace('\\', '/') + "#i2004");
+				}
+			}
+		}
+
 		private static bool ping(string pcName) {
 			Ping ping = new Ping();
 			PingOptions pingOptions = new PingOptions();
@@ -99,9 +109,11 @@ namespace pc_finnder.src.Main {
 		public string checkAsistentConnected(string computerName) {
 			try {
 				if (ping(computerName)) {
-					foreach (Process proces in Process.GetProcessesByName("msra", computerName)) {
+					Process[] processes = Process.GetProcessesByName("msra", computerName);
+					//Process[] procs = Process.GetProcesses(computerName);
+					foreach (Process proces in processes) {
 						string s = proces.MainWindowTitle;
-						int a = s.IndexOf("вам помогает ")+13;
+						int a = s.IndexOf("вам помогает ") + 13;
 						if (a == 12)
 							continue;
 						string ss = s.Substring(a);
@@ -110,7 +122,7 @@ namespace pc_finnder.src.Main {
 						return sss;
 					}
 				} //else MessageBox.Show($"{computerName} don't ping");
-			} catch { }
+			} catch (Exception e) { }
 			return "";
 		}
 

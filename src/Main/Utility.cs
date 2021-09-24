@@ -11,9 +11,8 @@ using Newtonsoft.Json;
 namespace pc_finnder.src.Main {
 	static class Utility {
 
-		public static bool RUN_FROM_APPDATA = true;
-		public static bool DEBUG_MESSAGES = false;
-		public static string VERSION = "1.5 beta";
+		public static bool RUN_FROM_APPDATA = false;
+		public static string VERSION = "1.5";
 		public class Configuration {
 			public string loginsPath; //{ get; set;} 
 			public string inventoryPath; //{ get; set;} 
@@ -36,7 +35,6 @@ namespace pc_finnder.src.Main {
 				//await Task.Run(() => {
 				//MessageBox.Show(localPath);
 				Directory.SetCurrentDirectory(APPDATA_PATH);
-				if (Utility.DEBUG_MESSAGES) { MessageBox.Show("starting rPCSMT.exe"); }
 				Utility.execProcess("rPCSMT.exe");
 				//});
 				Environment.Exit(0);

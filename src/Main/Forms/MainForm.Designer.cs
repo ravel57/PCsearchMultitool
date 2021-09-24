@@ -41,6 +41,7 @@
 			this.info_button = new System.Windows.Forms.Button();
 			this.ip_button = new System.Windows.Forms.Button();
 			this.explorer_button = new System.Windows.Forms.Button();
+			this.printerInfo_button = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// PCs_listBox
@@ -68,7 +69,7 @@
 			this.copy_button.Location = new System.Drawing.Point(172, 196);
 			this.copy_button.Name = "copy_button";
 			this.copy_button.Size = new System.Drawing.Size(187, 25);
-			this.copy_button.TabIndex = 5;
+			this.copy_button.TabIndex = 6;
 			this.copy_button.Text = "В БУФЕР ОБМАНА";
 			this.copy_button.UseVisualStyleBackColor = true;
 			this.copy_button.Click += new System.EventHandler(this.copy_button_Click);
@@ -127,7 +128,7 @@
 			this.ping_button.Location = new System.Drawing.Point(172, 256);
 			this.ping_button.Name = "ping_button";
 			this.ping_button.Size = new System.Drawing.Size(136, 23);
-			this.ping_button.TabIndex = 7;
+			this.ping_button.TabIndex = 8;
 			this.ping_button.Text = "                 PING";
 			this.ping_button.UseVisualStyleBackColor = true;
 			this.ping_button.Click += new System.EventHandler(this.ping_button_Click);
@@ -149,7 +150,7 @@
 			this.sortPCnamesMethod_button.Location = new System.Drawing.Point(336, 3);
 			this.sortPCnamesMethod_button.Name = "sortPCnamesMethod_button";
 			this.sortPCnamesMethod_button.Size = new System.Drawing.Size(23, 23);
-			this.sortPCnamesMethod_button.TabIndex = 10;
+			this.sortPCnamesMethod_button.TabIndex = 11;
 			this.sortPCnamesMethod_button.Text = "DATA";
 			this.sortBatton_toolTip.SetToolTip(this.sortPCnamesMethod_button, "Выбрана сортировка по ДАТЕ");
 			this.sortPCnamesMethod_button.UseVisualStyleBackColor = true;
@@ -166,7 +167,7 @@
 			this.infinitePing_button.Margin = new System.Windows.Forms.Padding(1);
 			this.infinitePing_button.Name = "infinitePing_button";
 			this.infinitePing_button.Size = new System.Drawing.Size(23, 23);
-			this.infinitePing_button.TabIndex = 8;
+			this.infinitePing_button.TabIndex = 9;
 			this.infinitePing_button.Text = "/t";
 			this.infinitePing_button.UseVisualStyleBackColor = true;
 			this.infinitePing_button.Click += new System.EventHandler(this.infinitePing_button_Click);
@@ -175,19 +176,20 @@
 			// 
 			this.version_label.AutoSize = true;
 			this.version_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.version_label.Location = new System.Drawing.Point(328, 279);
+			this.version_label.Location = new System.Drawing.Point(344, 279);
 			this.version_label.Margin = new System.Windows.Forms.Padding(0);
 			this.version_label.Name = "version_label";
 			this.version_label.Size = new System.Drawing.Size(0, 9);
 			this.version_label.TabIndex = 8;
+			this.version_label.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// info_button
 			// 
 			this.info_button.Location = new System.Drawing.Point(172, 165);
 			this.info_button.Name = "info_button";
-			this.info_button.Size = new System.Drawing.Size(187, 25);
+			this.info_button.Size = new System.Drawing.Size(156, 25);
 			this.info_button.TabIndex = 4;
-			this.info_button.Text = "ИНФО";
+			this.info_button.Text = "           ИНФО";
 			this.info_button.UseVisualStyleBackColor = true;
 			this.info_button.Click += new System.EventHandler(this.info_button_Click);
 			// 
@@ -198,26 +200,40 @@
 			this.ip_button.Margin = new System.Windows.Forms.Padding(1);
 			this.ip_button.Name = "ip_button";
 			this.ip_button.Size = new System.Drawing.Size(27, 23);
-			this.ip_button.TabIndex = 9;
+			this.ip_button.TabIndex = 10;
 			this.ip_button.Text = "IP";
 			this.ip_button.UseVisualStyleBackColor = true;
 			this.ip_button.Click += new System.EventHandler(this.ip_button_Click);
 			// 
 			// explorer_button
 			// 
+			this.explorer_button.Enabled = false;
 			this.explorer_button.Location = new System.Drawing.Point(172, 227);
 			this.explorer_button.Name = "explorer_button";
 			this.explorer_button.Size = new System.Drawing.Size(187, 25);
-			this.explorer_button.TabIndex = 6;
+			this.explorer_button.TabIndex = 7;
 			this.explorer_button.Text = "ПРОВОДНИК";
 			this.explorer_button.UseVisualStyleBackColor = true;
 			this.explorer_button.Click += new System.EventHandler(this.explorer_button_Click);
+			// 
+			// printerInfo_button
+			// 
+			this.printerInfo_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.printerInfo_button.Location = new System.Drawing.Point(332, 165);
+			this.printerInfo_button.Margin = new System.Windows.Forms.Padding(1);
+			this.printerInfo_button.Name = "printerInfo_button";
+			this.printerInfo_button.Size = new System.Drawing.Size(27, 25);
+			this.printerInfo_button.TabIndex = 5;
+			this.printerInfo_button.Text = "ПР";
+			this.printerInfo_button.UseVisualStyleBackColor = true;
+			this.printerInfo_button.Click += new System.EventHandler(this.printerInfo_button_Click);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.AutoScroll = true;
 			this.ClientSize = new System.Drawing.Size(366, 293);
+			this.Controls.Add(this.printerInfo_button);
 			this.Controls.Add(this.ip_button);
 			this.Controls.Add(this.infinitePing_button);
 			this.Controls.Add(this.version_label);
@@ -263,6 +279,7 @@
 		private System.Windows.Forms.Button info_button;
 		private System.Windows.Forms.Button ip_button;
 		private System.Windows.Forms.Button explorer_button;
+		private System.Windows.Forms.Button printerInfo_button;
 	}
 }
 
