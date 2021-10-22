@@ -37,11 +37,19 @@
 			this.sortPCnamesMethod_button = new System.Windows.Forms.Button();
 			this.sortBatton_toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.infinitePing_button = new System.Windows.Forms.Button();
-			this.version_label = new System.Windows.Forms.Label();
 			this.info_button = new System.Windows.Forms.Button();
 			this.ip_button = new System.Windows.Forms.Button();
 			this.explorer_button = new System.Windows.Forms.Button();
 			this.printerInfo_button = new System.Windows.Forms.Button();
+			this.extraToolsMenu_button = new System.Windows.Forms.Button();
+			this.extra_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.closeAssistent_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.taskManager_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.config_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.almonah_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openDistro_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.version_textBox = new System.Windows.Forms.TextBox();
+			this.extra_contextMenuStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// PCs_listBox
@@ -49,7 +57,7 @@
 			this.PCs_listBox.FormattingEnabled = true;
 			this.PCs_listBox.Location = new System.Drawing.Point(7, 31);
 			this.PCs_listBox.Name = "PCs_listBox";
-			this.PCs_listBox.Size = new System.Drawing.Size(159, 251);
+			this.PCs_listBox.Size = new System.Drawing.Size(159, 277);
 			this.PCs_listBox.TabIndex = 1;
 			this.PCs_listBox.SelectedIndexChanged += new System.EventHandler(this.PCs_listBox_SelectedIndexChanged);
 			this.PCs_listBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.PCs_listBox_DoubleClick);
@@ -150,7 +158,7 @@
 			this.sortPCnamesMethod_button.Location = new System.Drawing.Point(336, 3);
 			this.sortPCnamesMethod_button.Name = "sortPCnamesMethod_button";
 			this.sortPCnamesMethod_button.Size = new System.Drawing.Size(23, 23);
-			this.sortPCnamesMethod_button.TabIndex = 11;
+			this.sortPCnamesMethod_button.TabIndex = 99;
 			this.sortPCnamesMethod_button.Text = "DATA";
 			this.sortBatton_toolTip.SetToolTip(this.sortPCnamesMethod_button, "Выбрана сортировка по ДАТЕ");
 			this.sortPCnamesMethod_button.UseVisualStyleBackColor = true;
@@ -171,17 +179,6 @@
 			this.infinitePing_button.Text = "/t";
 			this.infinitePing_button.UseVisualStyleBackColor = true;
 			this.infinitePing_button.Click += new System.EventHandler(this.infinitePing_button_Click);
-			// 
-			// version_label
-			// 
-			this.version_label.AutoSize = true;
-			this.version_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.version_label.Location = new System.Drawing.Point(344, 279);
-			this.version_label.Margin = new System.Windows.Forms.Padding(0);
-			this.version_label.Name = "version_label";
-			this.version_label.Size = new System.Drawing.Size(0, 9);
-			this.version_label.TabIndex = 8;
-			this.version_label.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// info_button
 			// 
@@ -228,15 +225,85 @@
 			this.printerInfo_button.UseVisualStyleBackColor = true;
 			this.printerInfo_button.Click += new System.EventHandler(this.printerInfo_button_Click);
 			// 
+			// extraToolsMenu_button
+			// 
+			this.extraToolsMenu_button.AllowDrop = true;
+			this.extraToolsMenu_button.CausesValidation = false;
+			this.extraToolsMenu_button.Location = new System.Drawing.Point(172, 284);
+			this.extraToolsMenu_button.Name = "extraToolsMenu_button";
+			this.extraToolsMenu_button.Size = new System.Drawing.Size(187, 23);
+			this.extraToolsMenu_button.TabIndex = 11;
+			this.extraToolsMenu_button.Text = "ДОПОЛНИТЕЛЬНО";
+			this.extraToolsMenu_button.UseVisualStyleBackColor = true;
+			this.extraToolsMenu_button.Click += new System.EventHandler(this.extraToolsMenu_button_Click);
+			// 
+			// extra_contextMenuStrip
+			// 
+			this.extra_contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.closeAssistent_toolStripMenuItem,
+            this.taskManager_toolStripMenuItem,
+            this.config_toolStripMenuItem,
+            this.almonah_toolStripMenuItem,
+            this.openDistro_toolStripMenuItem});
+			this.extra_contextMenuStrip.Name = "extra_contextMenuStrip";
+			this.extra_contextMenuStrip.Size = new System.Drawing.Size(184, 114);
+			// 
+			// closeAssistent_toolStripMenuItem
+			// 
+			this.closeAssistent_toolStripMenuItem.Name = "closeAssistent_toolStripMenuItem";
+			this.closeAssistent_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			this.closeAssistent_toolStripMenuItem.Text = "Закрыть ассистента";
+			this.closeAssistent_toolStripMenuItem.Click += new System.EventHandler(this.closeAssistent_toolStripMenuItem_Click);
+			// 
+			// taskManager_toolStripMenuItem
+			// 
+			this.taskManager_toolStripMenuItem.Name = "taskManager_toolStripMenuItem";
+			this.taskManager_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			this.taskManager_toolStripMenuItem.Text = "Диспечер задач";
+			this.taskManager_toolStripMenuItem.Click += new System.EventHandler(this.taskManager_toolStripMenuItem_Click);
+			// 
+			// config_toolStripMenuItem
+			// 
+			this.config_toolStripMenuItem.Name = "config_toolStripMenuItem";
+			this.config_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			this.config_toolStripMenuItem.Text = "Настройки";
+			this.config_toolStripMenuItem.Click += new System.EventHandler(this.config_toolStripMenuItem_Click);
+			// 
+			// almonah_toolStripMenuItem
+			// 
+			this.almonah_toolStripMenuItem.Name = "almonah_toolStripMenuItem";
+			this.almonah_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			this.almonah_toolStripMenuItem.Text = "Альмонах";
+			this.almonah_toolStripMenuItem.Click += new System.EventHandler(this.almonah_toolStripMenuItem_Click);
+			// 
+			// openDistro_toolStripMenuItem
+			// 
+			this.openDistro_toolStripMenuItem.Name = "openDistro_toolStripMenuItem";
+			this.openDistro_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			this.openDistro_toolStripMenuItem.Text = "Distro";
+			this.openDistro_toolStripMenuItem.Click += new System.EventHandler(this.openDistro_toolStripMenuItem_Click);
+			// 
+			// version_textBox
+			// 
+			this.version_textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.version_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.version_textBox.Location = new System.Drawing.Point(299, 307);
+			this.version_textBox.Name = "version_textBox";
+			this.version_textBox.ReadOnly = true;
+			this.version_textBox.Size = new System.Drawing.Size(57, 10);
+			this.version_textBox.TabIndex = 100;
+			this.version_textBox.TabStop = false;
+			this.version_textBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.AutoScroll = true;
-			this.ClientSize = new System.Drawing.Size(366, 293);
+			this.ClientSize = new System.Drawing.Size(366, 317);
+			this.Controls.Add(this.version_textBox);
+			this.Controls.Add(this.extraToolsMenu_button);
 			this.Controls.Add(this.printerInfo_button);
 			this.Controls.Add(this.ip_button);
 			this.Controls.Add(this.infinitePing_button);
-			this.Controls.Add(this.version_label);
 			this.Controls.Add(this.sortPCnamesMethod_button);
 			this.Controls.Add(this.ping_button);
 			this.Controls.Add(this.sub_textBox);
@@ -257,6 +324,7 @@
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Closing);
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+			this.extra_contextMenuStrip.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -275,11 +343,18 @@
 		private System.Windows.Forms.ToolTip sortBatton_toolTip;
 		private System.Windows.Forms.Button infinitePing_button;
 		public System.Windows.Forms.ListBox PCs_listBox;
-		private System.Windows.Forms.Label version_label;
 		private System.Windows.Forms.Button info_button;
 		private System.Windows.Forms.Button ip_button;
 		private System.Windows.Forms.Button explorer_button;
 		private System.Windows.Forms.Button printerInfo_button;
+		private System.Windows.Forms.Button extraToolsMenu_button;
+		private System.Windows.Forms.ContextMenuStrip extra_contextMenuStrip;
+		private System.Windows.Forms.ToolStripMenuItem closeAssistent_toolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem taskManager_toolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem config_toolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem almonah_toolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem openDistro_toolStripMenuItem;
+		private System.Windows.Forms.TextBox version_textBox;
 	}
 }
 

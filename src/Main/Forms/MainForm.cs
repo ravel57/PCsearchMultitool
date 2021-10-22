@@ -12,17 +12,17 @@ using pc_finnder.src.Main;
 using System.Globalization;
 using System.Reflection;
 using System.Diagnostics;
+using pc_finnder.src.Main.Forms;
 //using System.Linq;
 
 namespace pc_finnder {
 	public partial class MainForm : Form {
 		LoginsParser loginsParser = new LoginsParser();
 		UsernameInputProcessing usernameInputProcessing = new UsernameInputProcessing();
-		AdminTools adminTools = new AdminTools();
 
 		private string selectedUser;
 		LoginsParser.PCinfo[] computersOfSelectedUser;
-		LoginsParser.PCinfo selectedComputerinfo;
+		LoginsParser.PCinfo selectedComputer;
 		enum sortBy { DATA = 0, LOGS = 1 };
 		sortBy selectedSortingMethod = sortBy.DATA;
 
@@ -51,7 +51,8 @@ namespace pc_finnder {
 				this.PCs_listBox.DrawMode = DrawMode.OwnerDrawVariable;
 				this.PCs_listBox.MeasureItem += new MeasureItemEventHandler(PCs_listBox_MeasureItem);
 				this.PCs_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
-				this.version_label.Text = Utility.VERSION;
+				//this.version_label.Text = Utility.VERSION;
+				this.version_textBox.Text = Utility.VERSION;
 				this.info_button.Enabled = (Directory.Exists(Utility.configuration.inventoryPath));
 				this.printerInfo_button.Enabled = (Directory.Exists(Utility.configuration.inventoryPath));
 
@@ -166,7 +167,7 @@ namespace pc_finnder {
 				this.computersOfSelectedUser = new LoginsParser.PCinfo[0];
 				this.userName_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
 				this.userName_comboBox.Text = "";
-				this.selectedComputerinfo = new LoginsParser.PCinfo();
+				this.selectedComputer = new LoginsParser.PCinfo();
 			}
 			//чтобы курсор не падал за список и был виден
 			Cursor.Current = Cursors.Default;
@@ -202,17 +203,17 @@ namespace pc_finnder {
 				//DateTime dt = DateTime.ParseExact(computersOfSelectedUser[i].lastLog.Substring(0, 8), $"dd{r}MM{r}yy", CultureInfo.InvariantCulture);
 				DateTime dt = Convert.ToDateTime(computersOfSelectedUser[i].lastLog.Substring(0, 8));
 				if (dt.AddMonths(4) >= DateTime.Now) {
-					if (await Task.Run(() => adminTools.checkUserLogedIn(selectedUser, computersOfSelectedUser[i].name))) {
+					if (await Task.Run(() => AdminTools.checkUserLogedIn(selectedUser, computersOfSelectedUser[i].name))) {
 						computersOfSelectedUser[i].loginStatus = true;
 						this.PCs_listBox.Refresh();
 						//this.PCs_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
 					}
 					try {
-						if (await Task.Run(() => (adminTools.checkAsistentConnected(computersOfSelectedUser[i].name) != String.Empty))) {
-							computersOfSelectedUser[i].assisting += adminTools.checkAsistentConnected(computersOfSelectedUser[i].name);
+						if (await Task.Run(() => (AdminTools.checkAsistentConnected(computersOfSelectedUser[i].name) != string.Empty))) {
+							computersOfSelectedUser[i].assisting += AdminTools.checkAsistentConnected(computersOfSelectedUser[i].name);
 							int curIndex = this.PCs_listBox.SelectedIndex;
 							List<string> sa = loginsParser.getPcNames(computersOfSelectedUser);
-							sa[i] += "\n    msra: " + adminTools.checkAsistentConnected(computersOfSelectedUser[i].name);
+							sa[i] += "\n    msra: " + AdminTools.checkAsistentConnected(computersOfSelectedUser[i].name);
 							this.PCs_listBox.DataSource = sa;
 							this.PCs_listBox.Refresh();
 							this.PCs_listBox.SelectedIndex = curIndex;
@@ -284,9 +285,9 @@ namespace pc_finnder {
 					selectedPC.firstLog,
 					selectedPC.lastLog + " [" + selectedPC.lastLogType + "]"
 				};
-					selectedComputerinfo = selectedPC;
+					selectedComputer = selectedPC;
 					this.explorer_button.Enabled = false;
-					this.explorer_button.Enabled = await Task.Run(() =>  Directory.Exists("\\\\" + selectedPC.name + "\\c$\\") );
+					this.explorer_button.Enabled = await Task.Run(() => Directory.Exists("\\\\" + selectedPC.name + "\\c$\\"));
 				}
 			} catch (Exception) { }
 		}
@@ -294,46 +295,46 @@ namespace pc_finnder {
 
 
 		private void openAsist_button_Click(object sender, EventArgs e) {
-			adminTools.openAsist(selectedComputerinfo.name);
+			AdminTools.openAsist(selectedComputer.name);
 		}
 
 
 		private void openRDP_button_Click(object sender, EventArgs e) {
-			adminTools.openRDP(selectedComputerinfo.name);
+			AdminTools.openRDP(selectedComputer.name);
 		}
 
 
 		private void info_button_Click(object sender, EventArgs e) {
-			adminTools.GetComputerInfo(selectedComputerinfo.name);
+			AdminTools.GetComputerInfo(selectedComputer.name);
 		}
 
 		private void copy_button_Click(object sender, EventArgs e) {
-			if (selectedComputerinfo.name != null)
-				Clipboard.SetText(selectedComputerinfo.name);
+			if (selectedComputer.name != null)
+				Clipboard.SetText(selectedComputer.name);
 		}
 
 		private void explorer_button_Click(object sender, EventArgs e) {
-			adminTools.openComputerInExplorer(selectedComputerinfo.name);
+			AdminTools.openComputerInExplorer(selectedComputer.name);
 		}
 
 		private void ping_button_Click(object sender, EventArgs e) {
-			adminTools.pingResalt(selectedComputerinfo.name);
+			AdminTools.pingResalt(selectedComputer.name);
 		}
 
 		async private void infinitePing_button_Click(object sender, EventArgs e) {
-			if (selectedComputerinfo.name != null) {
+			if (selectedComputer.name != null) {
 				await Task.Run(() => {
-					Application.Run(new InfinitePing_Form(selectedComputerinfo.name));
+					Application.Run(new InfinitePing_Form(selectedComputer.name));
 				});
 			}
 		}
 
 		private void printerInfo_button_Click(object sender, EventArgs e) {
-			adminTools.GetPrintersInfo(selectedComputerinfo.name);
+			AdminTools.GetPrintersInfo(selectedComputer.name);
 		}
 
 		private void ip_button_Click(object sender, EventArgs e) {
-			adminTools.getIpByHostname(selectedComputerinfo.name);
+			AdminTools.getIpByHostname(selectedComputer.name);
 		}
 
 		private void searchType_label_Click(object sender, EventArgs e) {
@@ -344,6 +345,44 @@ namespace pc_finnder {
 			//try {
 			//	this.userName_comboBox.Text = (sender as ListBox).SelectedItem.ToString();
 			//} catch (NullReferenceException) { }
+		}
+
+
+		private void extraToolsMenu_button_Click(object sender, EventArgs e) {
+			if (selectedComputer.name == null) {
+				extra_contextMenuStrip.Items[0].Enabled = false;
+				extra_contextMenuStrip.Items[1].Enabled = false;
+			} else {
+				extra_contextMenuStrip.Items[0].Enabled = true;
+				extra_contextMenuStrip.Items[1].Enabled = true;
+			}
+			extra_contextMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y);
+		}
+
+		private void closeAssistent_toolStripMenuItem_Click(object sender, EventArgs e) {
+			if (selectedComputer.name != null) {
+				AdminTools.killProcess(selectedComputer.name, "msra.exe");
+			}
+		}
+
+		private async void taskManager_toolStripMenuItem_Click(object sender, EventArgs e) {
+			if (selectedComputer.name != null) {
+				await Task.Run(() => {
+					Application.Run(new TaskManagerForm(selectedComputer.name));
+				});
+			}
+		}
+
+		private void config_toolStripMenuItem_Click(object sender, EventArgs e) {
+			new ConfigForm();
+		}
+
+		private void almonah_toolStripMenuItem_Click(object sender, EventArgs e) {
+			Utility.execProcess("\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" " + Utility.configuration.almonahUrl);
+		}
+
+		private void openDistro_toolStripMenuItem_Click(object sender, EventArgs e) {
+			Utility.execProcess("explorer " + Utility.configuration.distroPath);
 		}
 	}
 }

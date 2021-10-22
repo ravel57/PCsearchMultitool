@@ -13,21 +13,21 @@ using System.Diagnostics;
 using System.ComponentModel;
 
 namespace pc_finnder.src.Main {
-	class AdminTools {
+	static class AdminTools {
 
-		public void openAsist(string pcName) {
+		public static void openAsist(string pcName) {
 			if (pcName != null)
 				Utility.execProcess($"MSRA.exe /offerra  {pcName}");
 		}
 
 
-		public void openRDP(string pcName) {
+		public static void openRDP(string pcName) {
 			if (pcName != null)
 				Utility.execProcess($"MSTSC.exe /v:{pcName}");
 		}
 
 
-		public void GetComputerInfo(string pcName) {
+		public static void GetComputerInfo(string pcName) {
 			if (pcName != null & Utility.configuration.inventoryPath != String.Empty) {
 				string[] founfComputers = Directory.GetFiles(Utility.configuration.inventoryPath, pcName + '*', SearchOption.AllDirectories);
 				if (founfComputers.Length == 1)
@@ -36,7 +36,7 @@ namespace pc_finnder.src.Main {
 		}
 
 
-		public void GetPrintersInfo(string computerName) {
+		public static void GetPrintersInfo(string computerName) {
 			if (computerName != null & Utility.configuration.inventoryPath != String.Empty) {
 				string[] founfComputers = Directory.GetFiles(Utility.configuration.inventoryPath, computerName + '*', SearchOption.AllDirectories);
 				if (founfComputers.Length == 1) {
@@ -60,7 +60,7 @@ namespace pc_finnder.src.Main {
 		}
 
 
-		public async void pingResalt(string pcName) {
+		public static async void pingResalt(string pcName) {
 			if (pcName != null) {
 				if (ping(pcName))
 					await Task.Run(() => {
@@ -70,19 +70,10 @@ namespace pc_finnder.src.Main {
 					await Task.Run(() => {
 						MessageBox.Show("НЕ пингуется", pcName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 					});
-				//try {
-				//	PingReply reply = ping.Send(pcName, 120, buffer, pingOptions);
-				//	if (reply.Status == IPStatus.Success)
-				//		MessageBox.Show("Пингуется", @"¯\_(ツ)_/¯", MessageBoxButtons.OK, MessageBoxIcon.Information);
-				//	else
-				//		MessageBox.Show("НЕ пингуется", @"¯\_(ツ)_/¯", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				//} catch (System.Net.NetworkInformation.PingException) {
-				//	MessageBox.Show("НЕ пингуется", @"¯\_(ツ)_/¯", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				//}
 			}
 		}
 
-		public bool checkUserLogedIn(string username, string computerName) {
+		public static bool checkUserLogedIn(string username, string computerName) {
 			try {
 				if (ping(computerName)) {
 					ITerminalServer server = new TerminalServicesManager().GetRemoteServer(computerName);
@@ -106,7 +97,7 @@ namespace pc_finnder.src.Main {
 			return false;
 		}
 
-		public string checkAsistentConnected(string computerName) {
+		public static string checkAsistentConnected(string computerName) {
 			try {
 				if (ping(computerName)) {
 					Process[] processes = Process.GetProcessesByName("msra", computerName);
@@ -126,7 +117,7 @@ namespace pc_finnder.src.Main {
 			return "";
 		}
 
-		public async void getIpByHostname(string pcName) {
+		public static async void getIpByHostname(string pcName) {
 			if (pcName != null)
 				if (ping(pcName)) {
 					IPAddress[] iPAddresses = Dns.GetHostAddresses(pcName);
@@ -140,11 +131,39 @@ namespace pc_finnder.src.Main {
 				}
 		}
 
-		public async void openComputerInExplorer(string computerName) {
+		public static async void openComputerInExplorer(string computerName) {
 			if (computerName != null)
 				await Task.Run(() => {
 					Utility.execProcess("explorer.exe \\\\" + computerName + "\\c$");
 				});
+		}
+
+		public static List<ITerminalServicesProcess> getProcess(string computerName) {
+			if (ping(computerName)) {
+				ITerminalServer server = new TerminalServicesManager().GetRemoteServer(computerName);
+				server.Open();
+				List<ITerminalServicesProcess> processes = server.GetProcesses().ToList();
+				return processes;
+			} else
+				return new List<ITerminalServicesProcess>();
+		}
+
+		public static void killProcess(string computerName, int PID) {
+			if (ping(computerName)) {
+				ITerminalServer server = new TerminalServicesManager().GetRemoteServer(computerName);
+				server.Open();
+				server.GetProcess(PID).Kill();
+			}
+		}
+
+		public static void killProcess(string computerName, string processName) {
+			try {
+				if (ping(computerName)) {
+					ITerminalServer server = new TerminalServicesManager().GetRemoteServer(computerName);
+					server.Open();
+					server.GetProcesses().First(p => p.ProcessName == processName).Kill();
+				}
+			} catch { }
 		}
 	}
 }
