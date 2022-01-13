@@ -6,21 +6,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace pc_finnder.src.Main {
-	static class Users {
+namespace rPCSMT.src.Main {
+	static class LogsFoldersSearchResalts {
 
 		//public Users() {
 		//	//userNames = getUsersNames();
 		//}
 
-		public static string[] userNames { get; set; }
+		public static string[] searchResalts { get; set; }
 
-		public static void updateUsersNames() {
+		public static void updateSearchResalts() {
 			try {
 				string[] usernames = Directory.GetDirectories(Utility.configuration.loginsPath);
 				for (int i = 0; i < usernames.Length; i++)
 					usernames[i] = usernames[i].Substring(Utility.configuration.loginsPath.Length + 1).ToLower();
-				userNames = usernames;
+				searchResalts = usernames;
 			} catch {
 				//MessageBox.Show("Ошибка в имени");
 			}

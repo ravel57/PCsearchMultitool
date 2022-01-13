@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace pc_finnder {
+namespace rPCSMT {
 	public partial class InfinitePing_Form : Form {
 		string PCname;
 		List<string> results = new List<string>();

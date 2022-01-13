@@ -6,12 +6,12 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace pc_finnder.src.Main {
+namespace rPCSMT.src.Main {
 	class ActiveSessions {
 
 		public ActiveSessions() { }
 
-		private void SearchActiveSessions(LoginsParser.PCinfo[] selectedUserPCs, string selectedUser) {
+		private void SearchActiveSessions(LogFileParser. foundElementInfo [] selectedUserPCs, string selectedUser) {
 			ITerminalServicesManager manager = new TerminalServicesManager();
 			for (int i = 0; i < selectedUserPCs.Length; i++) {
 				try {

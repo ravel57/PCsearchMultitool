@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.ComponentModel;
 
-namespace pc_finnder.src.Main {
+namespace rPCSMT.src.Main {
 	static class AdminTools {
 
 		public static void openAsist(string pcName) {
@@ -80,14 +80,9 @@ namespace pc_finnder.src.Main {
 					server.Open();
 					//ITerminalServicesSession session = server.GetSessions().First(_session => _session.UserAccount.Value.ToLower() == username.ToLower());
 					foreach (ITerminalServicesSession session in server.GetSessions()) {
-						if (session.UserAccount != null /*& session.LastInputTime != null*/) {
-							string userAccount = session.UserAccount.Value;
-							//if (session.UserAccount.Value.ToLower().Contains(username.ToLower())
-							if (userAccount.ToLower().Remove(0, userAccount.IndexOf("\\") + 1) == username.ToLower()
-									& session.ConnectionState == Cassia.ConnectionState.Active
-								) {
-								return true;
-							}
+						if (session.UserAccount != null && session.UserName.ToLower() == username.ToLower()
+							& session.ConnectionState == Cassia.ConnectionState.Active) {
+							return true;
 						}
 					}
 				} //else MessageBox.Show($"{computerName} don't ping");
@@ -138,7 +133,7 @@ namespace pc_finnder.src.Main {
 				});
 		}
 
-		public static List<ITerminalServicesProcess> getProcess(string computerName) {
+		public static List<ITerminalServicesProcess> getComputerProcess(string computerName) {
 			if (ping(computerName)) {
 				ITerminalServer server = new TerminalServicesManager().GetRemoteServer(computerName);
 				server.Open();

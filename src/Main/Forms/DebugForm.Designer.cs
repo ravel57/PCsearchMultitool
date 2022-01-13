@@ -1,4 +1,4 @@
-﻿namespace pc_finnder {
+﻿namespace rPCSMT {
 	partial class Debug_Form {
 		/// <summary>
 		/// Required designer variable.

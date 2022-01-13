@@ -1,4 +1,4 @@
-﻿namespace pc_finnder {
+﻿namespace rPCSMT {
 	partial class MainForm {
 		/// <summary>
 		/// Обязательная переменная конструктора.
@@ -25,7 +25,7 @@
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			this.PCs_listBox = new System.Windows.Forms.ListBox();
+			this.parsedEntitiesNames_listBox = new System.Windows.Forms.ListBox();
 			this.searchType_label = new System.Windows.Forms.Label();
 			this.copy_button = new System.Windows.Forms.Button();
 			this.openAsist_button = new System.Windows.Forms.Button();
@@ -46,21 +46,23 @@
 			this.closeAssistent_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.taskManager_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.config_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.almonah_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openDistro_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.version_textBox = new System.Windows.Forms.TextBox();
+			this.ChangeSearchObjects = new System.Windows.Forms.Button();
+			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.extra_contextMenuStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// PCs_listBox
+			// parsedEntitiesNames_listBox
 			// 
-			this.PCs_listBox.FormattingEnabled = true;
-			this.PCs_listBox.Location = new System.Drawing.Point(7, 31);
-			this.PCs_listBox.Name = "PCs_listBox";
-			this.PCs_listBox.Size = new System.Drawing.Size(159, 277);
-			this.PCs_listBox.TabIndex = 1;
-			this.PCs_listBox.SelectedIndexChanged += new System.EventHandler(this.PCs_listBox_SelectedIndexChanged);
-			this.PCs_listBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.PCs_listBox_DoubleClick);
+			this.parsedEntitiesNames_listBox.FormattingEnabled = true;
+			this.parsedEntitiesNames_listBox.Location = new System.Drawing.Point(7, 31);
+			this.parsedEntitiesNames_listBox.Name = "parsedEntitiesNames_listBox";
+			this.parsedEntitiesNames_listBox.Size = new System.Drawing.Size(159, 277);
+			this.parsedEntitiesNames_listBox.TabIndex = 1;
+			this.parsedEntitiesNames_listBox.SelectedIndexChanged += new System.EventHandler(this.PCs_listBox_SelectedIndexChanged);
+			this.parsedEntitiesNames_listBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PCs_listBox_KeyDown);
+			this.parsedEntitiesNames_listBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.PCs_listBox_DoubleClick);
 			// 
 			// searchType_label
 			// 
@@ -70,7 +72,6 @@
 			this.searchType_label.Size = new System.Drawing.Size(106, 13);
 			this.searchType_label.TabIndex = 1;
 			this.searchType_label.Text = "Имя пользователя:";
-			this.searchType_label.Click += new System.EventHandler(this.searchType_label_Click);
 			// 
 			// copy_button
 			// 
@@ -112,9 +113,9 @@
 			this.userName_comboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.userName_comboBox.FormattingEnabled = true;
 			this.userName_comboBox.IntegralHeight = false;
-			this.userName_comboBox.Location = new System.Drawing.Point(111, 4);
+			this.userName_comboBox.Location = new System.Drawing.Point(128, 4);
 			this.userName_comboBox.Name = "userName_comboBox";
-			this.userName_comboBox.Size = new System.Drawing.Size(223, 21);
+			this.userName_comboBox.Size = new System.Drawing.Size(206, 21);
 			this.userName_comboBox.TabIndex = 0;
 			this.userName_comboBox.SelectedIndexChanged += new System.EventHandler(this.UserName_comboBox_SelectedIndexChanged);
 			this.userName_comboBox.TextUpdate += new System.EventHandler(this.userName_comboBox_TextChanged);
@@ -158,7 +159,7 @@
 			this.sortPCnamesMethod_button.Location = new System.Drawing.Point(336, 3);
 			this.sortPCnamesMethod_button.Name = "sortPCnamesMethod_button";
 			this.sortPCnamesMethod_button.Size = new System.Drawing.Size(23, 23);
-			this.sortPCnamesMethod_button.TabIndex = 99;
+			this.sortPCnamesMethod_button.TabIndex = 12;
 			this.sortPCnamesMethod_button.Text = "DATA";
 			this.sortBatton_toolTip.SetToolTip(this.sortPCnamesMethod_button, "Выбрана сортировка по ДАТЕ");
 			this.sortPCnamesMethod_button.UseVisualStyleBackColor = true;
@@ -243,10 +244,10 @@
             this.closeAssistent_toolStripMenuItem,
             this.taskManager_toolStripMenuItem,
             this.config_toolStripMenuItem,
-            this.almonah_toolStripMenuItem,
             this.openDistro_toolStripMenuItem});
 			this.extra_contextMenuStrip.Name = "extra_contextMenuStrip";
 			this.extra_contextMenuStrip.Size = new System.Drawing.Size(184, 114);
+			this.extra_contextMenuStrip.Click += new System.EventHandler(this.extra_contextMenuStrip_Click);
 			// 
 			// closeAssistent_toolStripMenuItem
 			// 
@@ -269,13 +270,6 @@
 			this.config_toolStripMenuItem.Text = "Настройки";
 			this.config_toolStripMenuItem.Click += new System.EventHandler(this.config_toolStripMenuItem_Click);
 			// 
-			// almonah_toolStripMenuItem
-			// 
-			this.almonah_toolStripMenuItem.Name = "almonah_toolStripMenuItem";
-			this.almonah_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-			this.almonah_toolStripMenuItem.Text = "Альмонах";
-			this.almonah_toolStripMenuItem.Click += new System.EventHandler(this.almonah_toolStripMenuItem_Click);
-			// 
 			// openDistro_toolStripMenuItem
 			// 
 			this.openDistro_toolStripMenuItem.Name = "openDistro_toolStripMenuItem";
@@ -286,6 +280,7 @@
 			// version_textBox
 			// 
 			this.version_textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.version_textBox.Enabled = false;
 			this.version_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.version_textBox.Location = new System.Drawing.Point(299, 307);
 			this.version_textBox.Name = "version_textBox";
@@ -293,14 +288,26 @@
 			this.version_textBox.Size = new System.Drawing.Size(57, 10);
 			this.version_textBox.TabIndex = 100;
 			this.version_textBox.TabStop = false;
+			this.version_textBox.Text = "versin";
 			this.version_textBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// ChangeSearchObjects
+			// 
+			this.ChangeSearchObjects.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.ChangeSearchObjects.Location = new System.Drawing.Point(7, 3);
+			this.ChangeSearchObjects.Margin = new System.Windows.Forms.Padding(0);
+			this.ChangeSearchObjects.Name = "ChangeSearchObjects";
+			this.ChangeSearchObjects.Size = new System.Drawing.Size(118, 23);
+			this.ChangeSearchObjects.TabIndex = 13;
+			this.ChangeSearchObjects.Text = "Имя пользователя:";
+			this.ChangeSearchObjects.UseVisualStyleBackColor = true;
+			this.ChangeSearchObjects.Click += new System.EventHandler(this.ChangeSearchObjects_button_Click);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.ClientSize = new System.Drawing.Size(366, 317);
 			this.Controls.Add(this.version_textBox);
-			this.Controls.Add(this.extraToolsMenu_button);
 			this.Controls.Add(this.printerInfo_button);
 			this.Controls.Add(this.ip_button);
 			this.Controls.Add(this.infinitePing_button);
@@ -314,8 +321,10 @@
 			this.Controls.Add(this.openAsist_button);
 			this.Controls.Add(this.explorer_button);
 			this.Controls.Add(this.copy_button);
+			this.Controls.Add(this.parsedEntitiesNames_listBox);
+			this.Controls.Add(this.ChangeSearchObjects);
 			this.Controls.Add(this.searchType_label);
-			this.Controls.Add(this.PCs_listBox);
+			this.Controls.Add(this.extraToolsMenu_button);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
@@ -342,7 +351,7 @@
 		private System.Windows.Forms.Button sortPCnamesMethod_button;
 		private System.Windows.Forms.ToolTip sortBatton_toolTip;
 		private System.Windows.Forms.Button infinitePing_button;
-		public System.Windows.Forms.ListBox PCs_listBox;
+		public System.Windows.Forms.ListBox parsedEntitiesNames_listBox;
 		private System.Windows.Forms.Button info_button;
 		private System.Windows.Forms.Button ip_button;
 		private System.Windows.Forms.Button explorer_button;
@@ -352,9 +361,10 @@
 		private System.Windows.Forms.ToolStripMenuItem closeAssistent_toolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem taskManager_toolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem config_toolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem almonah_toolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openDistro_toolStripMenuItem;
 		private System.Windows.Forms.TextBox version_textBox;
+		private System.Windows.Forms.Button ChangeSearchObjects;
+		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
 	}
 }
 

@@ -8,101 +8,89 @@ using System.Windows.Forms;
 using System.IO;
 using System.Net.NetworkInformation;
 using Cassia;
-using pc_finnder.src.Main;
+using rPCSMT.src.Main;
 using System.Globalization;
 using System.Reflection;
 using System.Diagnostics;
-using pc_finnder.src.Main.Forms;
+using rPCSMT.src.Main.Forms;
 //using System.Linq;
 
-namespace pc_finnder {
+namespace rPCSMT {
 	public partial class MainForm : Form {
-		LoginsParser loginsParser = new LoginsParser();
-		UsernameInputProcessing usernameInputProcessing = new UsernameInputProcessing();
 
-		private string selectedUser;
-		LoginsParser.PCinfo[] computersOfSelectedUser;
-		LoginsParser.PCinfo selectedComputer;
+		private string selectedComboboxItem;
+		private string selectedComputer;
+		LogFileParser.foundElementInfo[] parsedEntities;
+		LogFileParser.foundElementInfo parsedEntity;
 		enum sortBy { DATA = 0, LOGS = 1 };
 		sortBy selectedSortingMethod = sortBy.DATA;
 
-		//static Debug_Form debug_Form;
-		//async static void runDebugForm () {
-		//	debug_Form = new Debug_Form();
-		//	await Task.Run(() => {
-		//		Application.Run(debug_Form);
-		//	});
-		//}
-
+		public enum SearchFor { users = 0, computers = 1 };
+		public static SearchFor selectedSearchType = SearchFor.users;
 
 		public MainForm() {
 			InitializeComponent();
 		}
 
+
 		//on load
 		private async void MainForm_Load(object sender, EventArgs e) {
 			if (Directory.GetCurrentDirectory() != Utility.APPDATA_PATH & Utility.RUN_FROM_APPDATA) {
-				Utility.RunLocal();
+				Utility.startLocal();
 			} else {
+				// load settings
 				Utility.run();
 				//window position 
 				this.Location = Utility.settings.windowCord;
 				//redraw listbox to select active computer
-				this.PCs_listBox.DrawMode = DrawMode.OwnerDrawVariable;
-				this.PCs_listBox.MeasureItem += new MeasureItemEventHandler(PCs_listBox_MeasureItem);
-				this.PCs_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
-				//this.version_label.Text = Utility.VERSION;
+				this.parsedEntitiesNames_listBox.DrawMode = DrawMode.OwnerDrawVariable;
+				this.parsedEntitiesNames_listBox.MeasureItem += new MeasureItemEventHandler(PCs_listBox_MeasureItem);
+				this.parsedEntitiesNames_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
 				this.version_textBox.Text = Utility.VERSION;
-				this.info_button.Enabled = (Directory.Exists(Utility.configuration.inventoryPath));
-				this.printerInfo_button.Enabled = (Directory.Exists(Utility.configuration.inventoryPath));
+				this.info_button.Enabled = Directory.Exists(Utility.configuration.inventoryPath);
+				this.printerInfo_button.Enabled = Directory.Exists(Utility.configuration.inventoryPath);
+				//foreach (var el in Utility.configuration.extraFolders)
+				//	this.extra_contextMenuStrip.Items.Add(el.key);
+				//foreach (var el in Utility.configuration.extraURLs)
+				//	this.extra_contextMenuStrip.Items.Add(el.key);
+				LogsFoldersSearchResalts.updateSearchResalts();
+				this.userName_comboBox.Text = Utility.inputString;
+				this.userName_comboBox_TextChanged(sender, e);
 
-				//[DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
-				//Process[] processes = Process.GetProcessesByName("explorer");
-				//WindowScrape.Types.HwndObject hwnd;
-				//foreach (var process in processes) {
-				//	SetWindowPos(handle, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_SHOWWINDOW);
-				//	IntPtr handle = process.MainWindowHandle;
-				//	hwnd = new WindowScrape.Types.HwndObject(handle);
-				//}
 				await Task.Run(async () => {
 					while (true) {
-						Users.updateUsersNames();
 						await Task.Delay(TimeSpan.FromSeconds(60));
+						LogsFoldersSearchResalts.updateSearchResalts();
 						this.PCs_listBox_SelectedIndexChanged(sender, e);
 					}
 				});
 			}
 		}
 
+
 		private void MainForm_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 			Utility.settings.saveSettings(this.Location);
 		}
 
 
-		//need tests
 		private void PCs_listBox_MeasureItem(object sender, MeasureItemEventArgs e) {
-			e.ItemHeight = (int)e.Graphics.MeasureString(PCs_listBox.Items[e.Index].ToString(), PCs_listBox.Font, PCs_listBox.Width).Height;
+			e.ItemHeight = (int)e.Graphics.MeasureString(parsedEntitiesNames_listBox.Items[e.Index].ToString(), parsedEntitiesNames_listBox.Font, parsedEntitiesNames_listBox.Width).Height;
 		}
+
 
 		private void PCs_listBox_DrawItem(object sender, DrawItemEventArgs e) {
 			e.DrawBackground();
-			////need tests
-			//e.DrawFocusRectangle();
-			//e.Graphics.DrawString(PCs_listBox.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds);
-			////
 			bool isItemSelected = ((e.State & DrawItemState.Selected) == DrawItemState.Selected);
 			int itemIndex = e.Index;
-			if (itemIndex >= 0 && itemIndex < PCs_listBox.Items.Count) {
+			if (itemIndex >= 0 && itemIndex < parsedEntitiesNames_listBox.Items.Count) {
 				Graphics g = e.Graphics;
-				///////
-				string itemText = PCs_listBox.Items[itemIndex].ToString();
+				string itemText = parsedEntitiesNames_listBox.Items[itemIndex].ToString();
 
 				// Background Color	
 				SolidBrush backgroundColorBrush;
 				SolidBrush itemTextColorBrush;
-				//if (!computersOfSelectedUser.First(pc => pc.name == itemText).loginStatus)
-				if (!computersOfSelectedUser.First(pc => itemText.IndexOf(pc.name) >= 0).loginStatus) {
-					if (computersOfSelectedUser.First(pc => itemText.IndexOf(pc.name) >= 0).assisting != String.Empty) {
+				if (!parsedEntities.First(pc => itemText.Contains(pc.name)).loginStatus) {
+					if (parsedEntities.First(pc => itemText.IndexOf(pc.name) >= 0).assisting != String.Empty) {
 						backgroundColorBrush = new SolidBrush((isItemSelected) ? Color.SeaGreen : Color.White);
 						itemTextColorBrush = (isItemSelected) ? new SolidBrush(Color.White) : new SolidBrush(Color.SeaGreen);
 					} else {
@@ -110,7 +98,7 @@ namespace pc_finnder {
 						itemTextColorBrush = (isItemSelected) ? new SolidBrush(Color.White) : new SolidBrush(Color.Black);
 					}
 				} else {
-					if (computersOfSelectedUser.First(pc => itemText.IndexOf(pc.name) >= 0).assisting != String.Empty) {
+					if (parsedEntities.First(pc => itemText.Contains(pc.name)).assisting != String.Empty) {
 						backgroundColorBrush = new SolidBrush((isItemSelected) ? Color.Orange : Color.White);
 						itemTextColorBrush = (isItemSelected) ? new SolidBrush(Color.White) : new SolidBrush(Color.Orange);
 					} else {
@@ -118,40 +106,19 @@ namespace pc_finnder {
 						itemTextColorBrush = (isItemSelected) ? new SolidBrush(Color.White) : new SolidBrush(Color.Red);
 					}
 				}
-
 				g.FillRectangle(backgroundColorBrush, e.Bounds);
-
 				// Set text color
-				//if (!computersOfSelectedUser.First(pc => itemText.IndexOf(pc.name) >= 0).loginStatus)
-				//	itemTextColorBrush = (isItemSelected) ? new SolidBrush(Color.White) : new SolidBrush(Color.Black);
-				//else
-				//	itemTextColorBrush = (isItemSelected) ? new SolidBrush(Color.White) : new SolidBrush(Color.Red);
-
-				//if (computersOfSelectedUser.First(pc => pc.name == itemText).assisting == String.Empty)
-				g.DrawString(itemText, e.Font, itemTextColorBrush, PCs_listBox.GetItemRectangle(itemIndex).Location);
-				//else {
-				//	itemText += "\nmsra: " + computersOfSelectedUser.First(pc => pc.name == itemText).assisting;
-				//	g.DrawString(itemText, e.Font, itemTextColorBrush, PCs_listBox.GetItemRectangle(itemIndex).Location);
-				//	//this.PCs_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
-				//}
-				//Задник
-				//g.DrawString(itemText, new Font(FontFamily.GenericSansSerif, 8), new SolidBrush(Color.Black), e.Bounds);		
-				//g.FillRectangle(new SolidBrush(Color.Silver), e.Bounds);
-				//Текст
-				//e.Graphics.DrawString(this.PCs_listBox.Items[e.Index].ToString(), new Font(FontFamily.GenericSansSerif, 8), new SolidBrush(c), e.Bounds);
-
+				g.DrawString(itemText, e.Font, itemTextColorBrush, parsedEntitiesNames_listBox.GetItemRectangle(itemIndex).Location);
 				// Clean up
 				backgroundColorBrush.Dispose();
 				itemTextColorBrush.Dispose();
 			}
-
-			//e.Graphics.DrawString(PCs_listBox.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds);
 			e.DrawFocusRectangle();
 		}
 
 
 		private void userName_comboBox_TextChanged(object sender, EventArgs e) {
-			string[] userNameVariants = usernameInputProcessing.searchUsername(userName_comboBox.Text);
+			string[] userNameVariants = UsernameInputProcessing.searchUsername(userName_comboBox.Text);
 			//this.userName_comboBox.DataSource = userNameVariants;
 			if (userName_comboBox.Text.Length > 0 & userName_comboBox.Text != "\u007f" /* | userNameVariants.Length > 0*/) {
 				int cursorPosition = userName_comboBox.SelectionStart;
@@ -162,73 +129,67 @@ namespace pc_finnder {
 				this.userName_comboBox.Items.AddRange(userNameVariants);
 			} else {
 				//this.userName_comboBox.DroppedDown = false;
-				this.PCs_listBox.DataSource = null;
+				this.parsedEntitiesNames_listBox.DataSource = null;
 				this.PCinfo_textBox.Clear();
-				this.computersOfSelectedUser = new LoginsParser.PCinfo[0];
+				this.parsedEntities = new LogFileParser.foundElementInfo[0];
 				this.userName_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
 				this.userName_comboBox.Text = "";
-				this.selectedComputer = new LoginsParser.PCinfo();
+				this.parsedEntity = new LogFileParser.foundElementInfo();
 			}
 			//чтобы курсор не падал за список и был виден
 			Cursor.Current = Cursors.Default;
 		}
 
-		private void sortComputers(ref LoginsParser.PCinfo[] computers) {
+
+		private void sortComputers(ref LogFileParser.foundElementInfo[] computers) {
 			switch (selectedSortingMethod) {
 				case sortBy.LOGS: {
-						Array.Sort<LoginsParser.PCinfo>(computersOfSelectedUser, (x, y) => y.count.CompareTo(x.count));
+						Array.Sort<LogFileParser.foundElementInfo>(parsedEntities,
+							(x, y) => y.count.CompareTo(x.count));
 						break;
 					}
 				case sortBy.DATA: {
-						Array.Sort<LoginsParser.PCinfo>(computersOfSelectedUser, (x, y) => (
-								Convert.ToDateTime(y.lastLog.Substring(0, 14)).CompareTo(
-								Convert.ToDateTime(x.lastLog.Substring(0, 14)))
+						Array.Sort<LogFileParser.foundElementInfo>(parsedEntities, (x, y) => (
+							  Convert.ToDateTime(y.lastLog.Substring(0, 14)).CompareTo(
+							  Convert.ToDateTime(x.lastLog.Substring(0, 14)))
 						));
 						break;
 					}
 			}
 		}
 
+
 		private async void UserName_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
-			this.selectedUser = this.userName_comboBox.GetItemText(this.userName_comboBox.SelectedItem);
 			if (this.userName_comboBox.SelectedItem == null)
-				this.userName_comboBox.SelectedItem = 0;
-			//await Task.Run(async () => {
-			//	while (true) {
-			computersOfSelectedUser = loginsParser.ParceUsersComputers(selectedUser);
-			sortComputers(ref computersOfSelectedUser);
-			this.PCs_listBox.DataSource = loginsParser.getPcNames(computersOfSelectedUser);
-			//this.PCs_listBox.SelectedIndex = 0;
-			for (int i = 0; i < computersOfSelectedUser.Length; i++) {
-				//DateTime dt = DateTime.ParseExact(computersOfSelectedUser[i].lastLog.Substring(0, 8), $"dd{r}MM{r}yy", CultureInfo.InvariantCulture);
-				DateTime dt = Convert.ToDateTime(computersOfSelectedUser[i].lastLog.Substring(0, 8));
-				if (dt.AddMonths(4) >= DateTime.Now) {
-					if (await Task.Run(() => AdminTools.checkUserLogedIn(selectedUser, computersOfSelectedUser[i].name))) {
-						computersOfSelectedUser[i].loginStatus = true;
-						this.PCs_listBox.Refresh();
-						//this.PCs_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
+				//this.userName_comboBox.SelectedItem = 0;
+				this.userName_comboBox.SelectedItem = this.userName_comboBox.Items[0];
+			this.selectedComboboxItem = this.userName_comboBox.GetItemText(this.userName_comboBox.SelectedItem).ToString();
+
+			parsedEntities = LogFileParser.ParceUsersComputers(selectedComboboxItem);
+			sortComputers(ref parsedEntities);
+			this.parsedEntitiesNames_listBox.DataSource = LogFileParser.getNames(parsedEntities);
+			foreach (var el in parsedEntities) {
+				if (Convert.ToDateTime(el.lastLog.Substring(0, 8)).AddMonths(4) >= DateTime.Now) {
+					string computerName = String.Empty;
+					string userName = String.Empty;
+					switch (selectedSearchType) {
+						case SearchFor.users:
+							computerName = selectedComboboxItem;
+							userName = el.name;
+							break;
+						case SearchFor.computers:
+							computerName = el.name;
+							userName = selectedComboboxItem;
+							break;
 					}
-					try {
-						if (await Task.Run(() => (AdminTools.checkAsistentConnected(computersOfSelectedUser[i].name) != string.Empty))) {
-							computersOfSelectedUser[i].assisting += AdminTools.checkAsistentConnected(computersOfSelectedUser[i].name);
-							int curIndex = this.PCs_listBox.SelectedIndex;
-							List<string> sa = loginsParser.getPcNames(computersOfSelectedUser);
-							sa[i] += "\n    msra: " + AdminTools.checkAsistentConnected(computersOfSelectedUser[i].name);
-							this.PCs_listBox.DataSource = sa;
-							this.PCs_listBox.Refresh();
-							this.PCs_listBox.SelectedIndex = curIndex;
-							//this.PCs_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
-						};
-					} catch {
+					if (await Task.Run(() => AdminTools.checkUserLogedIn(computerName, userName))) {
+						el.loginStatus = true;
+						this.parsedEntitiesNames_listBox.Refresh();
 					}
 				}
 			}
-			//		await Task.Delay(TimeSpan.FromSeconds(60));
-			//		//this.PCs_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
-			//		//computersOfSelectedUser == loginsParser.ParceUsersComputers(selectedUser);
-			//	}
-			//});
 		}
+
 
 		private void sortPCnamesMethod_button_Click(object sender, EventArgs e) {
 			switch (selectedSortingMethod) {
@@ -246,23 +207,25 @@ namespace pc_finnder {
 				UserName_comboBox_SelectedIndexChanged(sender, e);
 				//PCs_listBox.SelectedIndex = 0;
 			}
-			PCs_listBox.Focus();
+			parsedEntitiesNames_listBox.Focus();
 		}
+
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e) {
 			if (e.KeyData == Keys.Escape) {
 				Environment.Exit(0);
 			}
-
 		}
+
+
 		private void UserName_comboBox_KeyDown(object sender, KeyEventArgs e) {
 			if (userName_comboBox.Text.Length > 0) {
 				switch (e.KeyCode) {
 					case Keys.Enter: {
-							if (this.userName_comboBox.SelectedIndex <= -1)
+							if (this.userName_comboBox.Items.Count > 0 && this.userName_comboBox.SelectedIndex <= -1)
 								this.userName_comboBox.SelectedIndex = 0;
-							//this.PCs_listBox.SelectedIndex = 0;
-							this.PCs_listBox.Focus();
+								//this.PCs_listBox.SelectedIndex = 0;
+							this.parsedEntitiesNames_listBox.Focus();
 							break;
 						}
 				}
@@ -276,18 +239,24 @@ namespace pc_finnder {
 		private async void PCs_listBox_SelectedIndexChanged(object sender, EventArgs e) {
 			try {
 				if (this.userName_comboBox.Text != "\u007f" & this.userName_comboBox.Text != "") {
-					LoginsParser.PCinfo selectedPC = computersOfSelectedUser.First(pc =>
-						pc.name == this.PCs_listBox.SelectedItem.ToString()
-					);
+					//LogFileParser.foundElementInfo selectedPC = parsedEntities
+					parsedEntity = parsedEntities.First(el => el.name == this.parsedEntitiesNames_listBox.SelectedItem.ToString());
 					this.PCinfo_textBox.Lines = new string[4] {
-					selectedPC.name,
-					selectedPC.count.ToString(),
-					selectedPC.firstLog,
-					selectedPC.lastLog + " [" + selectedPC.lastLogType + "]"
-				};
-					selectedComputer = selectedPC;
+						parsedEntity.name,
+						parsedEntity.count.ToString(),
+						parsedEntity.firstLog,
+						parsedEntity.lastLog + " [" + parsedEntity.lastLogType + "]"
+					};
+					switch (selectedSearchType) {
+						case SearchFor.users:
+							selectedComputer = parsedEntity.name;
+							break;
+						case SearchFor.computers:
+							selectedComputer = selectedComboboxItem;
+							break;
+					}
 					this.explorer_button.Enabled = false;
-					this.explorer_button.Enabled = await Task.Run(() => Directory.Exists("\\\\" + selectedPC.name + "\\c$\\"));
+					this.explorer_button.Enabled = await Task.Run(() => Directory.Exists("\\\\" + selectedComputer + "\\c$\\"));
 				}
 			} catch (Exception) { }
 		}
@@ -295,94 +264,140 @@ namespace pc_finnder {
 
 
 		private void openAsist_button_Click(object sender, EventArgs e) {
-			AdminTools.openAsist(selectedComputer.name);
+			AdminTools.openAsist(selectedComputer);
 		}
 
 
 		private void openRDP_button_Click(object sender, EventArgs e) {
-			AdminTools.openRDP(selectedComputer.name);
+			AdminTools.openRDP(selectedComputer);
 		}
 
 
 		private void info_button_Click(object sender, EventArgs e) {
-			AdminTools.GetComputerInfo(selectedComputer.name);
+			AdminTools.GetComputerInfo(selectedComputer);
 		}
 
 		private void copy_button_Click(object sender, EventArgs e) {
-			if (selectedComputer.name != null)
-				Clipboard.SetText(selectedComputer.name);
+			if (selectedComputer != null)
+				Clipboard.SetText(selectedComputer);
 		}
 
 		private void explorer_button_Click(object sender, EventArgs e) {
-			AdminTools.openComputerInExplorer(selectedComputer.name);
+			AdminTools.openComputerInExplorer(selectedComputer);
 		}
 
 		private void ping_button_Click(object sender, EventArgs e) {
-			AdminTools.pingResalt(selectedComputer.name);
+			AdminTools.pingResalt(selectedComputer);
 		}
 
 		async private void infinitePing_button_Click(object sender, EventArgs e) {
-			if (selectedComputer.name != null) {
+			if (selectedComputer != null) {
 				await Task.Run(() => {
-					Application.Run(new InfinitePing_Form(selectedComputer.name));
+					Application.Run(new InfinitePing_Form(selectedComputer));
 				});
 			}
 		}
 
+
 		private void printerInfo_button_Click(object sender, EventArgs e) {
-			AdminTools.GetPrintersInfo(selectedComputer.name);
+			AdminTools.GetPrintersInfo(selectedComputer);
 		}
+
 
 		private void ip_button_Click(object sender, EventArgs e) {
-			AdminTools.getIpByHostname(selectedComputer.name);
+			AdminTools.getIpByHostname(selectedComputer);
 		}
 
-		private void searchType_label_Click(object sender, EventArgs e) {
-
-		}
 
 		private void PCs_listBox_DoubleClick(object sender, MouseEventArgs e) {
-			//try {
-			//	this.userName_comboBox.Text = (sender as ListBox).SelectedItem.ToString();
-			//} catch (NullReferenceException) { }
+			swapSearchObject((sender as ListBox).SelectedItem.ToString());
+		}
+
+
+		private void PCs_listBox_KeyDown(object sender, KeyEventArgs e) {
+			switch (e.KeyData) {
+				case Keys.Escape:
+					Environment.Exit(0);
+					break;
+					//case Keys.Enter:
+					//	swapSearchObject((sender as ListBox).SelectedItem.ToString());
+					//	break;
+			}
+		}
+
+
+		private void swapSearchObject(string selectedElement) {
+			ChangeSearchObjects_button_Click(new Object(), new EventArgs());
+			userName_comboBox.Text = selectedElement;
+			userName_comboBox_TextChanged(new Object(), new EventArgs());
+			this.userName_comboBox.DroppedDown = false;
+			UserName_comboBox_SelectedIndexChanged(new Object(), new EventArgs());
+			parsedEntitiesNames_listBox.Focus();
 		}
 
 
 		private void extraToolsMenu_button_Click(object sender, EventArgs e) {
-			if (selectedComputer.name == null) {
+			if (selectedComputer == null) {
 				extra_contextMenuStrip.Items[0].Enabled = false;
 				extra_contextMenuStrip.Items[1].Enabled = false;
 			} else {
 				extra_contextMenuStrip.Items[0].Enabled = true;
 				extra_contextMenuStrip.Items[1].Enabled = true;
 			}
-			extra_contextMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y);
+			extra_contextMenuStrip.Show(extraToolsMenu_button, 1, (sender as Button).Height - 2);
 		}
 
+
 		private void closeAssistent_toolStripMenuItem_Click(object sender, EventArgs e) {
-			if (selectedComputer.name != null) {
-				AdminTools.killProcess(selectedComputer.name, "msra.exe");
+			if (selectedComputer != null) {
+				AdminTools.killProcess(selectedComputer, "msra.exe");
 			}
 		}
 
+
 		private async void taskManager_toolStripMenuItem_Click(object sender, EventArgs e) {
-			if (selectedComputer.name != null) {
+			if (selectedComputer != null) {
 				await Task.Run(() => {
-					Application.Run(new TaskManagerForm(selectedComputer.name));
+					Application.Run(new TaskManagerForm(selectedComputer));
 				});
 			}
 		}
+
 
 		private void config_toolStripMenuItem_Click(object sender, EventArgs e) {
 			new ConfigForm();
 		}
 
+
 		private void almonah_toolStripMenuItem_Click(object sender, EventArgs e) {
-			Utility.execProcess("\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" " + Utility.configuration.almonahUrl);
+			//Utility.execProcess("\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" " + Utility.configuration.almonahUrl);
 		}
+
 
 		private void openDistro_toolStripMenuItem_Click(object sender, EventArgs e) {
 			Utility.execProcess("explorer " + Utility.configuration.distroPath);
+		}
+
+
+		private void ChangeSearchObjects_button_Click(object sender, EventArgs e) {
+			switch (selectedSearchType) {
+				case SearchFor.users:
+					selectedSearchType = SearchFor.computers;
+					this.ChangeSearchObjects.Text = "Имя компьютера:";
+					break;
+				case SearchFor.computers:
+					selectedSearchType = SearchFor.users;
+					this.ChangeSearchObjects.Text = "Имя пользователя:";
+					break;
+			}
+			userName_comboBox.Text = String.Empty;
+			LogsFoldersSearchResalts.updateSearchResalts();
+			parsedEntitiesNames_listBox.DataSource = null;
+			userName_comboBox.Focus();
+		}
+
+		private void extra_contextMenuStrip_Click(object sender, EventArgs e) {
+			Utility.execProcess(this.extra_contextMenuStrip.Items[((e as MouseEventArgs).Y / 22)].Text);
 		}
 	}
 }

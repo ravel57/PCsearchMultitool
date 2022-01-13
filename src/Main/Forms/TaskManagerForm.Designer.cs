@@ -1,5 +1,5 @@
 ﻿
-namespace pc_finnder.src.Main.Forms {
+namespace rPCSMT.src.Main.Forms {
 	partial class TaskManagerForm {
 		/// <summary>
 		/// Required designer variable.
@@ -24,9 +24,11 @@ namespace pc_finnder.src.Main.Forms {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TaskManagerForm));
 			this.process_dataGridView = new System.Windows.Forms.DataGridView();
 			this.killProcces_button = new System.Windows.Forms.Button();
 			this.refresh_button = new System.Windows.Forms.Button();
+			this.allProcess_checkBox = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.process_dataGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -62,15 +64,28 @@ namespace pc_finnder.src.Main.Forms {
 			this.refresh_button.UseVisualStyleBackColor = true;
 			this.refresh_button.Click += new System.EventHandler(this.refresh_button_Click);
 			// 
+			// allProcess_checkBox
+			// 
+			this.allProcess_checkBox.AutoSize = true;
+			this.allProcess_checkBox.Location = new System.Drawing.Point(13, 305);
+			this.allProcess_checkBox.Name = "allProcess_checkBox";
+			this.allProcess_checkBox.Size = new System.Drawing.Size(98, 17);
+			this.allProcess_checkBox.TabIndex = 3;
+			this.allProcess_checkBox.Text = "Все процессы";
+			this.allProcess_checkBox.UseVisualStyleBackColor = true;
+			this.allProcess_checkBox.CheckedChanged += new System.EventHandler(this.allProcess_checkBox_CheckedChanged);
+			// 
 			// TaskManagerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(506, 340);
+			this.Controls.Add(this.allProcess_checkBox);
 			this.Controls.Add(this.refresh_button);
 			this.Controls.Add(this.killProcces_button);
 			this.Controls.Add(this.process_dataGridView);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "TaskManagerForm";
@@ -78,6 +93,7 @@ namespace pc_finnder.src.Main.Forms {
 			this.Load += new System.EventHandler(this.TaskManagerForm_Load);
 			((System.ComponentModel.ISupportInitialize)(this.process_dataGridView)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -86,5 +102,6 @@ namespace pc_finnder.src.Main.Forms {
 		private System.Windows.Forms.DataGridView process_dataGridView;
 		private System.Windows.Forms.Button killProcces_button;
 		private System.Windows.Forms.Button refresh_button;
+		private System.Windows.Forms.CheckBox allProcess_checkBox;
 	}
 }

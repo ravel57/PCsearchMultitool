@@ -7,15 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace pc_finnder.src.Main {
-	class UsernameInputProcessing {
+namespace rPCSMT.src.Main {
+	static class UsernameInputProcessing {
 
 		//private string[] users;
-		public UsernameInputProcessing() { }
 
-		LoginsParser parseLogins = new LoginsParser();
-
-		string[] translitUsername(string inpStr) {
+		static string[] translitUsername(string inpStr) {
 			//StringBuilder outStr = new StringBuilder();
 			List<StringBuilder> outStrbuilderArray = new List<StringBuilder>();
 			outStrbuilderArray.Add(new StringBuilder(""));
@@ -41,7 +38,7 @@ namespace pc_finnder.src.Main {
 						for (int i = 0; i < count; i++)
 							outStrbuilderArray[step * engLetter + i].Append(engTranslitAlphabet[index][engLetter]);
 					step *= engTranslitAlphabet[index].Length;
-				} else if (rusAlphabet.Contains(currentCharFromImputStr) | engAlphabet.Contains(currentCharFromImputStr))
+				} else if (currentCharFromImputStr!= ' ') //(rusAlphabet.Contains(currentCharFromImputStr) | engAlphabet.Contains(currentCharFromImputStr))
 					foreach (StringBuilder outStr in outStrbuilderArray)
 						outStr.Append(currentCharFromImputStr);
 			}
@@ -53,13 +50,13 @@ namespace pc_finnder.src.Main {
 		}
 
 
-		public string[] searchUsername(string inpUserName) {
+		public static string[] searchUsername(string inpUserName) {
 			string[] inpUserNameVariants = translitUsername(inpUserName.ToLower());
 			List<string> outStrList = new List<string>();
-			foreach (string username in Users.userNames) {
+			foreach (string searchResalt in LogsFoldersSearchResalts.searchResalts) {
 				foreach (string userNameVarriant in inpUserNameVariants)
-					if (username.IndexOf(userNameVarriant) >= 0)
-						outStrList.Add(username);
+					if (searchResalt.Contains(userNameVarriant))
+						outStrList.Add(searchResalt);
 			}
 			return outStrList.ToArray();
 		}

@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Drawing;
  
-namespace pc_finnder {
+namespace rPCSMT {
     class ColoredCheckedListBox : CheckedListBox {
         public ColoredCheckedListBox() {
         }

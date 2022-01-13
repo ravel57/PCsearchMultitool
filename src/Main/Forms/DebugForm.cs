@@ -8,7 +8,7 @@ using System.Text;
 //using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace pc_finnder {
+namespace rPCSMT {
 	public partial class Debug_Form : Form {
 		public Debug_Form() {
 			InitializeComponent();

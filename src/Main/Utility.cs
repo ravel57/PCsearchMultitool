@@ -7,26 +7,48 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
-using pc_finnder.src.Main.Forms;
+using rPCSMT.src.Main.Forms;
 
-namespace pc_finnder.src.Main {
+namespace rPCSMT.src.Main {
 	static class Utility {
 
 		public static bool RUN_FROM_APPDATA = true;
-		public const string VERSION  = "1.6";
-		private const string SETTINGS_FILENAME = ".\\set.json";
-		private const string CONFIGURATIONS_FILENAME = ".\\config.json";
+		public const string VERSION = "1.7.0";
+		private const string SETTINGS_FILENAME = "set.json";
+		private const string CONFIGURATIONS_FILENAME = "config.json";
 		public static string APPDATA_PATH {
 			get => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\rPCSMT";
 		}
+		public static string inputString = "";
 
 		public class Configuration {
-			public string loginsPath;
+
+			private string _loginsPath;
+			private bool _isSaving = false;
+			public string loginsPath {
+				set => _loginsPath = value;
+				get {
+					if (!_isSaving)
+						switch (MainForm.selectedSearchType) {
+							case MainForm.SearchFor.users:
+								return _loginsPath + "\\users";
+							case MainForm.SearchFor.computers:
+								return _loginsPath + "\\computers";
+						}
+					return _loginsPath;
+				}
+			}
 			public string inventoryPath;
-			public string almonahUrl;
 			public string distroPath;
+			public List<ConfigForm.Extra> extraFolders = new List<ConfigForm.Extra>();
+			public List<ConfigForm.Extra> extraURLs = new List<ConfigForm.Extra>();
 			public void saveConfiguration() {
+				_isSaving = true;
 				File.WriteAllText(CONFIGURATIONS_FILENAME, JsonConvert.SerializeObject(configuration));
+				_isSaving = false;
+			}
+			public string getOriginalLogPath() {
+				return _loginsPath;
 			}
 		}
 
@@ -41,11 +63,11 @@ namespace pc_finnder.src.Main {
 		public static Configuration configuration = new Configuration();
 		public static Settings settings = new Settings();
 
-		public static async void RunLocal() {
+		public static /*async*/ void startLocal() {
 			try {
 				CopyDirectory(".", APPDATA_PATH, false, new string[] { SETTINGS_FILENAME });
 				Directory.SetCurrentDirectory(APPDATA_PATH);
-				Utility.execProcess("rPCSMT.exe");
+				Utility.execProcess("rPCSMT.exe " + Utility.inputString);
 				Environment.Exit(0);
 			} catch (Exception e) {
 				MessageBox.Show(e.Message);
@@ -55,7 +77,7 @@ namespace pc_finnder.src.Main {
 		public static void run() {
 			try {
 				if (File.Exists(CONFIGURATIONS_FILENAME)) {
-					string configJson = File.ReadAllText(CONFIGURATIONS_FILENAME);//.Replace('\\', '/');
+					string configJson = File.ReadAllText(CONFIGURATIONS_FILENAME);
 					configuration = JsonConvert.DeserializeObject<Configuration>(configJson);
 					if (!Directory.Exists(configuration.loginsPath))
 						new ConfigForm();
@@ -71,12 +93,11 @@ namespace pc_finnder.src.Main {
 					while (settings.windowCord.X > Screen.AllScreens.Sum(s => s.Bounds.Width))
 						settings.windowCord.X -= Screen.PrimaryScreen.Bounds.Width;
 				} else {
-					settings.windowCord = new Point((Screen.AllScreens.Length > 1 ? Screen.PrimaryScreen.Bounds.Width + 100 : 100), 50);
-					//MessageBox.Show(JsonConvert.SerializeObject(windowCord));
+					settings.windowCord = new Point(100, 50);
 					File.WriteAllText(SETTINGS_FILENAME, JsonConvert.SerializeObject(settings));
 				}
-			} catch {
-				MessageBox.Show("Файл \'set.json\' поврежден");
+			} catch (Exception e) {
+				MessageBox.Show($"Файл '{SETTINGS_FILENAME}' не найден или поврежден\n\n{e.Message}\n\n{e.StackTrace}");
 			}
 		}
 
@@ -99,7 +120,7 @@ namespace pc_finnder.src.Main {
 				throw new DirectoryNotFoundException(
 					"Source directory does not exist or could not be found: "
 					+ sourceDirName
-					);
+				);
 			}
 
 			DirectoryInfo[] dirs = dir.GetDirectories();
