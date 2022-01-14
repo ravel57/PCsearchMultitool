@@ -43,14 +43,9 @@
 			this.printerInfo_button = new System.Windows.Forms.Button();
 			this.extraToolsMenu_button = new System.Windows.Forms.Button();
 			this.extra_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.closeAssistent_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.taskManager_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.config_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.openDistro_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.version_textBox = new System.Windows.Forms.TextBox();
 			this.ChangeSearchObjects = new System.Windows.Forms.Button();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-			this.extra_contextMenuStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// parsedEntitiesNames_listBox
@@ -60,9 +55,9 @@
 			this.parsedEntitiesNames_listBox.Name = "parsedEntitiesNames_listBox";
 			this.parsedEntitiesNames_listBox.Size = new System.Drawing.Size(159, 277);
 			this.parsedEntitiesNames_listBox.TabIndex = 1;
-			this.parsedEntitiesNames_listBox.SelectedIndexChanged += new System.EventHandler(this.PCs_listBox_SelectedIndexChanged);
-			this.parsedEntitiesNames_listBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PCs_listBox_KeyDown);
-			this.parsedEntitiesNames_listBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.PCs_listBox_DoubleClick);
+			this.parsedEntitiesNames_listBox.SelectedIndexChanged += new System.EventHandler(this.parsedEntitiesNames_listBox_SelectedIndexChanged);
+			this.parsedEntitiesNames_listBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.parsedEntitiesNames_listBox_KeyDown);
+			this.parsedEntitiesNames_listBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.parsedEntitiesNames_listBox_DoubleClick);
 			// 
 			// searchType_label
 			// 
@@ -240,42 +235,8 @@
 			// 
 			// extra_contextMenuStrip
 			// 
-			this.extra_contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.closeAssistent_toolStripMenuItem,
-            this.taskManager_toolStripMenuItem,
-            this.config_toolStripMenuItem,
-            this.openDistro_toolStripMenuItem});
 			this.extra_contextMenuStrip.Name = "extra_contextMenuStrip";
-			this.extra_contextMenuStrip.Size = new System.Drawing.Size(184, 114);
-			this.extra_contextMenuStrip.Click += new System.EventHandler(this.extra_contextMenuStrip_Click);
-			// 
-			// closeAssistent_toolStripMenuItem
-			// 
-			this.closeAssistent_toolStripMenuItem.Name = "closeAssistent_toolStripMenuItem";
-			this.closeAssistent_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-			this.closeAssistent_toolStripMenuItem.Text = "Закрыть ассистента";
-			this.closeAssistent_toolStripMenuItem.Click += new System.EventHandler(this.closeAssistent_toolStripMenuItem_Click);
-			// 
-			// taskManager_toolStripMenuItem
-			// 
-			this.taskManager_toolStripMenuItem.Name = "taskManager_toolStripMenuItem";
-			this.taskManager_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-			this.taskManager_toolStripMenuItem.Text = "Диспечер задач";
-			this.taskManager_toolStripMenuItem.Click += new System.EventHandler(this.taskManager_toolStripMenuItem_Click);
-			// 
-			// config_toolStripMenuItem
-			// 
-			this.config_toolStripMenuItem.Name = "config_toolStripMenuItem";
-			this.config_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-			this.config_toolStripMenuItem.Text = "Настройки";
-			this.config_toolStripMenuItem.Click += new System.EventHandler(this.config_toolStripMenuItem_Click);
-			// 
-			// openDistro_toolStripMenuItem
-			// 
-			this.openDistro_toolStripMenuItem.Name = "openDistro_toolStripMenuItem";
-			this.openDistro_toolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-			this.openDistro_toolStripMenuItem.Text = "Distro";
-			this.openDistro_toolStripMenuItem.Click += new System.EventHandler(this.openDistro_toolStripMenuItem_Click);
+			this.extra_contextMenuStrip.Size = new System.Drawing.Size(61, 4);
 			// 
 			// version_textBox
 			// 
@@ -333,7 +294,6 @@
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Closing);
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
-			this.extra_contextMenuStrip.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -358,10 +318,6 @@
 		private System.Windows.Forms.Button printerInfo_button;
 		private System.Windows.Forms.Button extraToolsMenu_button;
 		private System.Windows.Forms.ContextMenuStrip extra_contextMenuStrip;
-		private System.Windows.Forms.ToolStripMenuItem closeAssistent_toolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem taskManager_toolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem config_toolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem openDistro_toolStripMenuItem;
 		private System.Windows.Forms.TextBox version_textBox;
 		private System.Windows.Forms.Button ChangeSearchObjects;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;

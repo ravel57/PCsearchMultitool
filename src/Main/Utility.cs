@@ -13,7 +13,7 @@ namespace rPCSMT.src.Main {
 	static class Utility {
 
 		public static bool RUN_FROM_APPDATA = true;
-		public const string VERSION = "1.7.0";
+		public const string VERSION = "1.7.1";
 		private const string SETTINGS_FILENAME = "set.json";
 		private const string CONFIGURATIONS_FILENAME = "config.json";
 		public static string APPDATA_PATH {
@@ -56,14 +56,15 @@ namespace rPCSMT.src.Main {
 			public Point windowCord = new Point(0, 0);
 			public void saveSettings(Point cord) {
 				settings.windowCord = cord;
-				File.WriteAllText(SETTINGS_FILENAME, JsonConvert.SerializeObject(settings));
+				if (RUN_FROM_APPDATA)
+					File.WriteAllText(SETTINGS_FILENAME, JsonConvert.SerializeObject(settings));
 			}
 		}
 
 		public static Configuration configuration = new Configuration();
 		public static Settings settings = new Settings();
 
-		public static /*async*/ void startLocal() {
+		public static /*async*/ void startFromAppdata() {
 			try {
 				CopyDirectory(".", APPDATA_PATH, false, new string[] { SETTINGS_FILENAME });
 				Directory.SetCurrentDirectory(APPDATA_PATH);
@@ -74,17 +75,19 @@ namespace rPCSMT.src.Main {
 			}
 		}
 
-		public static void run() {
+		public static void initializeSettings() {
 			try {
 				if (File.Exists(CONFIGURATIONS_FILENAME)) {
 					string configJson = File.ReadAllText(CONFIGURATIONS_FILENAME);
 					configuration = JsonConvert.DeserializeObject<Configuration>(configJson);
-					if (!Directory.Exists(configuration.loginsPath))
+					if (!Directory.Exists(configuration.loginsPath)) {
+						MessageBox.Show($"В файле '{CONFIGURATIONS_FILENAME}' указан некорректный путь к папке с логами");
 						new ConfigForm();
+					}
 				} else
 					new ConfigForm();
 			} catch (Exception e) {
-				MessageBox.Show($"Файл '{CONFIGURATIONS_FILENAME}' не найден или поврежден\n\n{e.Message}\n\n{e.StackTrace}");
+				MessageBox.Show($"Файл '{CONFIGURATIONS_FILENAME}' поврежден\n\n{e.Message}\n\n{e.StackTrace}");
 			}
 			try {
 				if (File.Exists(SETTINGS_FILENAME)) {
@@ -94,10 +97,9 @@ namespace rPCSMT.src.Main {
 						settings.windowCord.X -= Screen.PrimaryScreen.Bounds.Width;
 				} else {
 					settings.windowCord = new Point(100, 50);
-					File.WriteAllText(SETTINGS_FILENAME, JsonConvert.SerializeObject(settings));
 				}
 			} catch (Exception e) {
-				MessageBox.Show($"Файл '{SETTINGS_FILENAME}' не найден или поврежден\n\n{e.Message}\n\n{e.StackTrace}");
+				MessageBox.Show($"Файл '{SETTINGS_FILENAME}' поврежден\n\n{e.Message}\n\n{e.StackTrace}");
 			}
 		}
 

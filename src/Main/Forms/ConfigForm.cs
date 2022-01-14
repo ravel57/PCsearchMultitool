@@ -42,7 +42,7 @@ namespace rPCSMT.src.Main.Forms {
 			this.ExtraUrls_dataGridView.Columns.Add("name", "Название");
 			this.ExtraUrls_dataGridView.Columns.Add("url", "Ссылка");
 			foreach (Extra extraURL in Utility.configuration.extraURLs) {
-				ExtraFolders_dataGridView.Rows.Add(new object[] { extraURL.key, extraURL.value });
+				ExtraUrls_dataGridView.Rows.Add(new object[] { extraURL.key, extraURL.value });
 			}
 			this.logs_textBox.Focus();
 		}

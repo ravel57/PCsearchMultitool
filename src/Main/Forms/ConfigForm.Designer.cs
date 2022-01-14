@@ -59,7 +59,7 @@ namespace rPCSMT.src.Main.Forms {
 			// 
 			// inventary_textBox
 			// 
-			this.inventary_textBox.Location = new System.Drawing.Point(13, 68);
+			this.inventary_textBox.Location = new System.Drawing.Point(13, 70);
 			this.inventary_textBox.Name = "inventary_textBox";
 			this.inventary_textBox.Size = new System.Drawing.Size(351, 20);
 			this.inventary_textBox.TabIndex = 0;
@@ -68,7 +68,7 @@ namespace rPCSMT.src.Main.Forms {
 			// logs_label
 			// 
 			this.logs_label.AutoSize = true;
-			this.logs_label.Location = new System.Drawing.Point(13, 7);
+			this.logs_label.Location = new System.Drawing.Point(12, 9);
 			this.logs_label.Name = "logs_label";
 			this.logs_label.Size = new System.Drawing.Size(74, 13);
 			this.logs_label.TabIndex = 1;
@@ -77,7 +77,7 @@ namespace rPCSMT.src.Main.Forms {
 			// inventary_label
 			// 
 			this.inventary_label.AutoSize = true;
-			this.inventary_label.Location = new System.Drawing.Point(13, 50);
+			this.inventary_label.Location = new System.Drawing.Point(12, 53);
 			this.inventary_label.Name = "inventary_label";
 			this.inventary_label.Size = new System.Drawing.Size(126, 13);
 			this.inventary_label.TabIndex = 2;
@@ -97,7 +97,7 @@ namespace rPCSMT.src.Main.Forms {
 			// setInventaryFolder_button
 			// 
 			this.setInventaryFolder_button.Enabled = false;
-			this.setInventaryFolder_button.Location = new System.Drawing.Point(371, 66);
+			this.setInventaryFolder_button.Location = new System.Drawing.Point(371, 68);
 			this.setInventaryFolder_button.Name = "setInventaryFolder_button";
 			this.setInventaryFolder_button.Size = new System.Drawing.Size(75, 23);
 			this.setInventaryFolder_button.TabIndex = 3;
@@ -112,7 +112,7 @@ namespace rPCSMT.src.Main.Forms {
 			// 
 			// distroPath_textBox
 			// 
-			this.distroPath_textBox.Location = new System.Drawing.Point(13, 109);
+			this.distroPath_textBox.Location = new System.Drawing.Point(13, 113);
 			this.distroPath_textBox.Name = "distroPath_textBox";
 			this.distroPath_textBox.Size = new System.Drawing.Size(351, 20);
 			this.distroPath_textBox.TabIndex = 0;
@@ -121,7 +121,7 @@ namespace rPCSMT.src.Main.Forms {
 			// distro_label
 			// 
 			this.distro_label.AutoSize = true;
-			this.distro_label.Location = new System.Drawing.Point(13, 92);
+			this.distro_label.Location = new System.Drawing.Point(12, 96);
 			this.distro_label.Name = "distro_label";
 			this.distro_label.Size = new System.Drawing.Size(68, 13);
 			this.distro_label.TabIndex = 2;
@@ -130,7 +130,7 @@ namespace rPCSMT.src.Main.Forms {
 			// distroFolder_button
 			// 
 			this.distroFolder_button.Enabled = false;
-			this.distroFolder_button.Location = new System.Drawing.Point(371, 107);
+			this.distroFolder_button.Location = new System.Drawing.Point(371, 111);
 			this.distroFolder_button.Name = "distroFolder_button";
 			this.distroFolder_button.Size = new System.Drawing.Size(75, 23);
 			this.distroFolder_button.TabIndex = 3;
@@ -142,7 +142,7 @@ namespace rPCSMT.src.Main.Forms {
 			// 
 			this.ExtraResources_tabControl.Controls.Add(this.ExtraResourcesFolders_tabPage);
 			this.ExtraResources_tabControl.Controls.Add(this.ExtraResourcesUrls_tabPage);
-			this.ExtraResources_tabControl.Location = new System.Drawing.Point(10, 133);
+			this.ExtraResources_tabControl.Location = new System.Drawing.Point(10, 142);
 			this.ExtraResources_tabControl.Name = "ExtraResources_tabControl";
 			this.ExtraResources_tabControl.SelectedIndex = 0;
 			this.ExtraResources_tabControl.Size = new System.Drawing.Size(432, 194);
@@ -161,6 +161,7 @@ namespace rPCSMT.src.Main.Forms {
 			// 
 			// ExtraFolders_dataGridView
 			// 
+			this.ExtraFolders_dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
 			this.ExtraFolders_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.ExtraFolders_dataGridView.Location = new System.Drawing.Point(-1, -1);
 			this.ExtraFolders_dataGridView.Name = "ExtraFolders_dataGridView";
@@ -182,6 +183,7 @@ namespace rPCSMT.src.Main.Forms {
 			// 
 			// ExtraUrls_dataGridView
 			// 
+			this.ExtraUrls_dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
 			this.ExtraUrls_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.ExtraUrls_dataGridView.Location = new System.Drawing.Point(-1, -1);
 			this.ExtraUrls_dataGridView.Name = "ExtraUrls_dataGridView";
@@ -194,17 +196,17 @@ namespace rPCSMT.src.Main.Forms {
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(454, 332);
+			this.ClientSize = new System.Drawing.Size(454, 344);
 			this.Controls.Add(this.ExtraResources_tabControl);
 			this.Controls.Add(this.distroFolder_button);
 			this.Controls.Add(this.setInventaryFolder_button);
 			this.Controls.Add(this.setLogsFolder_button);
-			this.Controls.Add(this.distro_label);
-			this.Controls.Add(this.inventary_label);
 			this.Controls.Add(this.logs_label);
 			this.Controls.Add(this.distroPath_textBox);
 			this.Controls.Add(this.inventary_textBox);
 			this.Controls.Add(this.logs_textBox);
+			this.Controls.Add(this.inventary_label);
+			this.Controls.Add(this.distro_label);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Name = "ConfigForm";
 			this.ShowIcon = false;

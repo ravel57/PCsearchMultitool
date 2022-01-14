@@ -166,7 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\taskM.ico" />
-    <None Include="Resources\path.txt" />
     <None Include="bin\path.txt" />
     <None Include="bin\Debug\path.txt" />
     <Content Include="Resources\ICO.ico" />

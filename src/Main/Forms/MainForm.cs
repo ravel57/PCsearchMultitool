@@ -36,32 +36,46 @@ namespace rPCSMT {
 		//on load
 		private async void MainForm_Load(object sender, EventArgs e) {
 			if (Directory.GetCurrentDirectory() != Utility.APPDATA_PATH & Utility.RUN_FROM_APPDATA) {
-				Utility.startLocal();
+				Utility.startFromAppdata();
 			} else {
 				// load settings
-				Utility.run();
+				Utility.initializeSettings();
+
 				//window position 
 				this.Location = Utility.settings.windowCord;
+
 				//redraw listbox to select active computer
 				this.parsedEntitiesNames_listBox.DrawMode = DrawMode.OwnerDrawVariable;
 				this.parsedEntitiesNames_listBox.MeasureItem += new MeasureItemEventHandler(PCs_listBox_MeasureItem);
 				this.parsedEntitiesNames_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
+
+				// enable buttons and version textbox
+				this.openAsist_button.Enabled = false;
+				this.openRDP_button.Enabled = false;
+				this.copy_button.Enabled = false;
+				this.ping_button.Enabled = false;
+				this.infinitePing_button.Enabled = false;
+				this.ip_button.Enabled = false;
 				this.version_textBox.Text = Utility.VERSION;
 				this.info_button.Enabled = Directory.Exists(Utility.configuration.inventoryPath);
-				this.printerInfo_button.Enabled = Directory.Exists(Utility.configuration.inventoryPath);
-				//foreach (var el in Utility.configuration.extraFolders)
-				//	this.extra_contextMenuStrip.Items.Add(el.key);
-				//foreach (var el in Utility.configuration.extraURLs)
-				//	this.extra_contextMenuStrip.Items.Add(el.key);
-				LogsFoldersSearchResalts.updateSearchResalts();
-				this.userName_comboBox.Text = Utility.inputString;
-				this.userName_comboBox_TextChanged(sender, e);
+				this.printerInfo_button.Enabled = this.info_button.Enabled;
 
+				// adding items to extra menu
+				updateExtraContextMenuStripItems();
+
+				// update log folders and set input parameter string
+				LogsFoldersSearchResalts.updateSearchResalts();
+				if (Utility.inputString != string.Empty) {
+					this.userName_comboBox.Text = Utility.inputString;
+					this.userName_comboBox_TextChanged(sender, e);
+				}
+
+				// starting updating for log folder
 				await Task.Run(async () => {
 					while (true) {
 						await Task.Delay(TimeSpan.FromSeconds(60));
 						LogsFoldersSearchResalts.updateSearchResalts();
-						this.PCs_listBox_SelectedIndexChanged(sender, e);
+						this.parsedEntitiesNames_listBox_SelectedIndexChanged(sender, e);
 					}
 				});
 			}
@@ -74,7 +88,11 @@ namespace rPCSMT {
 
 
 		private void PCs_listBox_MeasureItem(object sender, MeasureItemEventArgs e) {
-			e.ItemHeight = (int)e.Graphics.MeasureString(parsedEntitiesNames_listBox.Items[e.Index].ToString(), parsedEntitiesNames_listBox.Font, parsedEntitiesNames_listBox.Width).Height;
+			e.ItemHeight = (int)e.Graphics.MeasureString(
+				parsedEntitiesNames_listBox.Items[e.Index].ToString(),
+				parsedEntitiesNames_listBox.Font,
+				parsedEntitiesNames_listBox.Width
+			).Height;
 		}
 
 
@@ -118,16 +136,29 @@ namespace rPCSMT {
 
 
 		private void userName_comboBox_TextChanged(object sender, EventArgs e) {
-			string[] userNameVariants = UsernameInputProcessing.searchUsername(userName_comboBox.Text);
 			//this.userName_comboBox.DataSource = userNameVariants;
-			if (userName_comboBox.Text.Length > 0 & userName_comboBox.Text != "\u007f" /* | userNameVariants.Length > 0*/) {
+			if (userName_comboBox.Text.StartsWith("\u007f")) userName_comboBox.Text = userName_comboBox.Text.Replace("\u007f", "");
+			if (userName_comboBox.Text.Length > 0 /* | userNameVariants.Length > 0*/) {
+				this.openAsist_button.Enabled = true;
+				this.openRDP_button.Enabled = true;
+				this.copy_button.Enabled = true;
+				this.ping_button.Enabled = true;
+				this.infinitePing_button.Enabled = true;
+				this.ip_button.Enabled = true; 
+				string[] foundNames = UsernameInputProcessing.searchUsername(userName_comboBox.Text);
 				int cursorPosition = userName_comboBox.SelectionStart;
 				this.userName_comboBox.Items.Clear();
 				this.userName_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
 				this.userName_comboBox.DroppedDown = true;
 				this.userName_comboBox.Select(cursorPosition, 0);
-				this.userName_comboBox.Items.AddRange(userNameVariants);
+				this.userName_comboBox.Items.AddRange(foundNames);
 			} else {
+				this.openAsist_button.Enabled = false;
+				this.openRDP_button.Enabled = false;
+				this.copy_button.Enabled = false;
+				this.ping_button.Enabled = false;
+				this.infinitePing_button.Enabled = false;
+				this.ip_button.Enabled = false;
 				//this.userName_comboBox.DroppedDown = false;
 				this.parsedEntitiesNames_listBox.DataSource = null;
 				this.PCinfo_textBox.Clear();
@@ -135,6 +166,7 @@ namespace rPCSMT {
 				this.userName_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
 				this.userName_comboBox.Text = "";
 				this.parsedEntity = new LogFileParser.foundElementInfo();
+				this.selectedComputer = null;
 			}
 			//чтобы курсор не падал за список и был виден
 			Cursor.Current = Cursors.Default;
@@ -224,21 +256,25 @@ namespace rPCSMT {
 					case Keys.Enter: {
 							if (this.userName_comboBox.Items.Count > 0 && this.userName_comboBox.SelectedIndex <= -1)
 								this.userName_comboBox.SelectedIndex = 0;
-								//this.PCs_listBox.SelectedIndex = 0;
+							//this.PCs_listBox.SelectedIndex = 0;
 							this.parsedEntitiesNames_listBox.Focus();
+							break;
+						}
+					case Keys.Escape: {
+							Environment.Exit(0);
 							break;
 						}
 				}
 				if (e.KeyData == (Keys.Back | Keys.Control)) {
-					userName_comboBox.Text = "";
+					this.userName_comboBox.Text = this.userName_comboBox.Text.Remove(0, this.userName_comboBox.SelectionStart);
 				}
 			}
 		}
 
 
-		private async void PCs_listBox_SelectedIndexChanged(object sender, EventArgs e) {
+		private async void parsedEntitiesNames_listBox_SelectedIndexChanged(object sender, EventArgs e) {
 			try {
-				if (this.userName_comboBox.Text != "\u007f" & this.userName_comboBox.Text != "") {
+				if (this.userName_comboBox.Text != "") {
 					//LogFileParser.foundElementInfo selectedPC = parsedEntities
 					parsedEntity = parsedEntities.First(el => el.name == this.parsedEntitiesNames_listBox.SelectedItem.ToString());
 					this.PCinfo_textBox.Lines = new string[4] {
@@ -309,12 +345,12 @@ namespace rPCSMT {
 		}
 
 
-		private void PCs_listBox_DoubleClick(object sender, MouseEventArgs e) {
+		private void parsedEntitiesNames_listBox_DoubleClick(object sender, MouseEventArgs e) {
 			swapSearchObject((sender as ListBox).SelectedItem.ToString());
 		}
 
 
-		private void PCs_listBox_KeyDown(object sender, KeyEventArgs e) {
+		private void parsedEntitiesNames_listBox_KeyDown(object sender, KeyEventArgs e) {
 			switch (e.KeyData) {
 				case Keys.Escape:
 					Environment.Exit(0);
@@ -337,45 +373,26 @@ namespace rPCSMT {
 
 
 		private void extraToolsMenu_button_Click(object sender, EventArgs e) {
-			if (selectedComputer == null) {
-				extra_contextMenuStrip.Items[0].Enabled = false;
-				extra_contextMenuStrip.Items[1].Enabled = false;
-			} else {
-				extra_contextMenuStrip.Items[0].Enabled = true;
-				extra_contextMenuStrip.Items[1].Enabled = true;
-			}
+			extra_contextMenuStrip.Items[0].Enabled = selectedComputer != null;
+			extra_contextMenuStrip.Items[1].Enabled = selectedComputer != null;
+			extra_contextMenuStrip.Items[2].Enabled = selectedComputer != null;
 			extra_contextMenuStrip.Show(extraToolsMenu_button, 1, (sender as Button).Height - 2);
 		}
 
 
-		private void closeAssistent_toolStripMenuItem_Click(object sender, EventArgs e) {
+		private void closeAssistent() {
 			if (selectedComputer != null) {
 				AdminTools.killProcess(selectedComputer, "msra.exe");
 			}
 		}
 
 
-		private async void taskManager_toolStripMenuItem_Click(object sender, EventArgs e) {
+		private async void openTaskManager() {
 			if (selectedComputer != null) {
 				await Task.Run(() => {
 					Application.Run(new TaskManagerForm(selectedComputer));
 				});
 			}
-		}
-
-
-		private void config_toolStripMenuItem_Click(object sender, EventArgs e) {
-			new ConfigForm();
-		}
-
-
-		private void almonah_toolStripMenuItem_Click(object sender, EventArgs e) {
-			//Utility.execProcess("\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" " + Utility.configuration.almonahUrl);
-		}
-
-
-		private void openDistro_toolStripMenuItem_Click(object sender, EventArgs e) {
-			Utility.execProcess("explorer " + Utility.configuration.distroPath);
 		}
 
 
@@ -396,8 +413,58 @@ namespace rPCSMT {
 			userName_comboBox.Focus();
 		}
 
-		private void extra_contextMenuStrip_Click(object sender, EventArgs e) {
-			Utility.execProcess(this.extra_contextMenuStrip.Items[((e as MouseEventArgs).Y / 22)].Text);
+
+		private void updateExtraContextMenuStripItems() {
+			this.extra_contextMenuStrip.Items.Clear();
+			this.extra_contextMenuStrip.Items.Add("Закрыть ассистента");
+			this.extra_contextMenuStrip.Items.Add("Диспечер задач");
+			this.extra_contextMenuStrip.Items.Add("Поиск по выбраному элементу");
+			this.extra_contextMenuStrip.Items.Add("Настройки");
+			extra_contextMenuStrip.Items.Add(new ToolStripSeparator());
+			this.extra_contextMenuStrip.Items.Add("Distro");
+			foreach (var el in Utility.configuration.extraFolders)
+				this.extra_contextMenuStrip.Items.Add(el.key);
+			extra_contextMenuStrip.Items.Add(new ToolStripSeparator());
+			foreach (var el in Utility.configuration.extraURLs)
+				this.extra_contextMenuStrip.Items.Add(el.key);
+
+			this.extra_contextMenuStrip.Items[0].Click += (obj, eventArgs) => {
+				closeAssistent();
+			};
+			this.extra_contextMenuStrip.Items[1].Click += (obj, eventArgs) => {
+				openTaskManager();
+			};
+			this.extra_contextMenuStrip.Items[2].Click += (obj, eventArgs) => {
+				swapSearchObject(parsedEntitiesNames_listBox.SelectedItem.ToString());
+			};
+			this.extra_contextMenuStrip.Items[3].Click += (obj, eventArgs) => {
+				new ConfigForm();
+				updateExtraContextMenuStripItems();
+			};
+			this.extra_contextMenuStrip.Items[5].Click += (obj, eventArgs) => {
+				Utility.execProcess("explorer " + Utility.configuration.distroPath); ;
+			};
+			int selectedItem = 6;
+			for (; selectedItem < Utility.configuration.extraFolders.Count + 6; selectedItem++) {
+				this.extra_contextMenuStrip.Items[selectedItem].Click += (obj, eventArgs) => {
+					Utility.execProcess(
+						"explorer "
+						+ Utility.configuration.extraFolders.First(s => s.key == (obj as ToolStripMenuItem).Text).value);
+					//+ Utility.configuration.extraFolders[selectedItem - 6].value);
+				};
+			}
+			selectedItem++;
+			for (; selectedItem < Utility.configuration.extraURLs.Count + Utility.configuration.extraFolders.Count + 7; selectedItem++) {
+				this.extra_contextMenuStrip.Items[selectedItem].Click += (obj, eventArgs) => {
+					Utility.execProcess(
+						"\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" "
+						+ Utility.configuration.extraURLs.First(s => s.key == (obj as ToolStripMenuItem).Text).value
+					//+ Utility.configuration.extraURLs[selectedItem - Utility.configuration.extraFolders.Count - 7].value).ToString()
+					);
+				};
+			}
 		}
+
+
 	}
 }
