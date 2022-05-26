@@ -13,7 +13,7 @@ namespace rPCSMT.src.Main {
 	static class Utility {
 
 		public static bool RUN_FROM_APPDATA = true;
-		public const string VERSION = "1.7.1";
+		public const string VERSION = "1.8.0";
 		private const string SETTINGS_FILENAME = "set.json";
 		private const string CONFIGURATIONS_FILENAME = "config.json";
 		public static string APPDATA_PATH {
@@ -40,6 +40,8 @@ namespace rPCSMT.src.Main {
 			}
 			public string inventoryPath;
 			public string distroPath;
+			public string rPrinterManagerPath;
+			public bool movingInfinitePing;
 			public List<ConfigForm.Extra> extraFolders = new List<ConfigForm.Extra>();
 			public List<ConfigForm.Extra> extraURLs = new List<ConfigForm.Extra>();
 			public void saveConfiguration() {
@@ -54,6 +56,13 @@ namespace rPCSMT.src.Main {
 
 		public class Settings {
 			public Point windowCord = new Point(0, 0);
+			public List<ConfigForm.Extra> extraFolders = new List<ConfigForm.Extra>();
+			public List<ConfigForm.Extra> extraURLs = new List<ConfigForm.Extra>();
+			public bool closeAnotherCopyOfProgram = false;
+			public void saveSettings() {
+				if (RUN_FROM_APPDATA)
+					File.WriteAllText(SETTINGS_FILENAME, JsonConvert.SerializeObject(settings));
+			}
 			public void saveSettings(Point cord) {
 				settings.windowCord = cord;
 				if (RUN_FROM_APPDATA)
@@ -93,13 +102,21 @@ namespace rPCSMT.src.Main {
 				if (File.Exists(SETTINGS_FILENAME)) {
 					string setJson = File.ReadAllText(SETTINGS_FILENAME);
 					settings = JsonConvert.DeserializeObject<Settings>(setJson);
-					while (settings.windowCord.X > Screen.AllScreens.Sum(s => s.Bounds.Width))
-						settings.windowCord.X -= Screen.PrimaryScreen.Bounds.Width;
+					if (settings.windowCord.X > 0) {
+						while (settings.windowCord.X > Screen.AllScreens.Sum(s => s.Bounds.Width))
+							settings.windowCord.X -= Screen.PrimaryScreen.Bounds.Width;
+					} else {
+						settings.windowCord.X = 100;
+					}
+					if (settings.windowCord.Y < 0 || settings.windowCord.Y > Screen.AllScreens.Max(s => s.Bounds.Height)) {
+						settings.windowCord.Y = 50;
+					}
 				} else {
 					settings.windowCord = new Point(100, 50);
 				}
 			} catch (Exception e) {
 				MessageBox.Show($"Файл '{SETTINGS_FILENAME}' поврежден\n\n{e.Message}\n\n{e.StackTrace}");
+				settings.windowCord = new Point(100, 50);
 			}
 		}
 

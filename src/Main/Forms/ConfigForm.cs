@@ -32,10 +32,22 @@ namespace rPCSMT.src.Main.Forms {
 			logs_textBox.Text = Utility.configuration.getOriginalLogPath();
 			inventary_textBox.Text = Utility.configuration.inventoryPath;
 			distroPath_textBox.Text = Utility.configuration.distroPath;
+			rPrinterManager_textBox.Text = Utility.configuration.rPrinterManagerPath;
+			movingInfinitePing_checkBox.Checked = Utility.configuration.movingInfinitePing;
 
+			setValuesToDataGridView();
+
+			closeAnotherCopyOfProgram_checkBox.Checked = Utility.settings.closeAnotherCopyOfProgram;
+			this.logs_textBox.Focus();
+		}
+
+		private void setValuesToDataGridView() {
 			this.ExtraFolders_dataGridView.Columns.Add("name", "Название");
 			this.ExtraFolders_dataGridView.Columns.Add("path", "Путь");
 			foreach (Extra extraFolder in Utility.configuration.extraFolders) {
+				ExtraFolders_dataGridView.Rows.Add(new object[] { extraFolder.key, extraFolder.value });
+			}
+			foreach (Extra extraFolder in Utility.settings.extraFolders) {
 				ExtraFolders_dataGridView.Rows.Add(new object[] { extraFolder.key, extraFolder.value });
 			}
 
@@ -44,8 +56,72 @@ namespace rPCSMT.src.Main.Forms {
 			foreach (Extra extraURL in Utility.configuration.extraURLs) {
 				ExtraUrls_dataGridView.Rows.Add(new object[] { extraURL.key, extraURL.value });
 			}
-			this.logs_textBox.Focus();
+			foreach (Extra extraURL in Utility.settings.extraURLs) {
+				ExtraUrls_dataGridView.Rows.Add(new object[] { extraURL.key, extraURL.value });
+			}
 		}
+
+		private void ConfigForm_Closing(object sender, CancelEventArgs e) {
+			Utility.configuration.saveConfiguration();
+			Utility.settings.saveSettings();
+		}
+
+		private void ExtraFolders_dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
+			string cellValue = (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+			List<ConfigForm.Extra> extraFoldersRef;
+			//Utility.RUN_FROM_APPDATA = true;
+			if (Utility.RUN_FROM_APPDATA)
+				extraFoldersRef = Utility.settings.extraFolders;
+			else
+				extraFoldersRef = Utility.configuration.extraFolders;
+			switch (e.ColumnIndex) {
+				case 0:
+					if (e.RowIndex >= extraFoldersRef.Count + (!Utility.RUN_FROM_APPDATA ? 0 : Utility.configuration.extraFolders.Count)) {
+						extraFoldersRef.Add(new Extra(cellValue, ""));
+					} else {
+						extraFoldersRef[e.RowIndex - (!Utility.RUN_FROM_APPDATA ? 0 : Utility.configuration.extraFolders.Count)].key = cellValue;
+					}
+					return;
+				case 1:
+					if (e.RowIndex >= extraFoldersRef.Count + (!Utility.RUN_FROM_APPDATA ? 0 : Utility.configuration.extraFolders.Count)) {
+						extraFoldersRef.Add(new Extra("", cellValue));
+					} else {
+						extraFoldersRef[e.RowIndex - (!Utility.RUN_FROM_APPDATA ? 0 : Utility.configuration.extraFolders.Count)].value = cellValue;
+					}
+					return;
+			}
+			//(sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].
+			ExtraFolders_dataGridView.Rows.Clear();
+			ExtraFolders_dataGridView.Columns.Clear();
+			setValuesToDataGridView();
+		}
+
+		private void ExtraUrls_dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
+			string cellValue = (string)(sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+			List<ConfigForm.Extra> extraURLsRef;
+			if (Utility.RUN_FROM_APPDATA)
+				extraURLsRef = Utility.settings.extraURLs;
+			else
+				extraURLsRef = Utility.configuration.extraURLs;
+			switch (e.ColumnIndex) {
+				case 0:
+					if (e.RowIndex >= Utility.configuration.extraURLs.Count) {
+						extraURLsRef.Add(new Extra(cellValue, ""));
+					} else {
+						extraURLsRef[e.RowIndex].key = cellValue;
+					}
+					return;
+				case 1:
+					if (e.RowIndex >= Utility.configuration.extraURLs.Count) {
+						extraURLsRef.Add(new Extra("", cellValue));
+					} else {
+						extraURLsRef[e.RowIndex].value = cellValue;
+					}
+					return;
+			}
+			//(sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].
+		}
+
 
 		private void setLogsFolder_button_Click(object sender, EventArgs e) {
 			if (logs_FolderBrowserDialog.ShowDialog() == DialogResult.OK) {
@@ -73,78 +149,38 @@ namespace rPCSMT.src.Main.Forms {
 				Utility.configuration.inventoryPath = inventary_textBox.Text;
 		}
 
-		private void almonahUrl_textBox_TextChanged(object sender, EventArgs e) {
-			//Utility.configuration.almonahUrl = almonahUrl_textBox.Text;
-		}
-
 		private void distroPath_textBox_TextChanged(object sender, EventArgs e) {
 			Utility.configuration.distroPath = distroPath_textBox.Text;
 		}
 
-		private void ConfigForm_Closing(object sender, CancelEventArgs e) {
-			Utility.configuration.saveConfiguration();
-		}
-
-		private void ExtraFolders_dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
-			string cellValue = (string)(sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-			switch (e.ColumnIndex) {
-				case 0:
-					if (e.RowIndex >= Utility.configuration.extraFolders.Count) {
-						Utility.configuration.extraFolders.Add(
-							new Extra(cellValue, "")
-						);
-					} else {
-						Utility.configuration.extraFolders[e.RowIndex].key = cellValue;
-					}
-					return;
-				case 1:
-					if (e.RowIndex >= Utility.configuration.extraFolders.Count) {
-						Utility.configuration.extraFolders.Add(
-							new Extra("", cellValue)
-						);
-					} else {
-						Utility.configuration.extraFolders[e.RowIndex].value = cellValue;
-					}
-					return;
-			}
-			//(sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].
-		}
-
-		private void ExtraUrls_dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
-			string cellValue = (string)(sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-			switch (e.ColumnIndex) {
-				case 0:
-					if (e.RowIndex >= Utility.configuration.extraURLs.Count) {
-						Utility.configuration.extraURLs.Add(
-							new Extra(cellValue, "")
-						);
-					} else {
-						Utility.configuration.extraURLs[e.RowIndex].key = cellValue;
-					}
-					return;
-				case 1:
-					if (e.RowIndex >= Utility.configuration.extraURLs.Count) {
-						Utility.configuration.extraURLs.Add(
-							new Extra("", cellValue)
-						);
-					} else {
-						Utility.configuration.extraURLs[e.RowIndex].value = cellValue;
-					}
-					return;
-			}
-			//(sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex].
+		private void rPrinterManager_textBox_TextChanged(object sender, EventArgs e) {
+			Utility.configuration.rPrinterManagerPath = rPrinterManager_textBox.Text;
 		}
 
 
 		private void ExtraFolders_dataGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e) {
-			Utility.configuration.extraFolders.Remove(Utility.configuration.extraFolders
+			List<ConfigForm.Extra> extraFoldersRef;
+			if (Utility.RUN_FROM_APPDATA) extraFoldersRef = Utility.settings.extraFolders;
+			else extraFoldersRef = Utility.configuration.extraFolders;
+			extraFoldersRef.Remove(Utility.configuration.extraFolders
 				.Find(el => el.key == e.Row.Cells[0].Value.ToString()));
 		}
 
 
 		private void ExtraUrls_dataGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e) {
-			Utility.configuration.extraURLs.Remove(Utility.configuration.extraURLs
+			List<ConfigForm.Extra> extraURLsRef;
+			if (Utility.RUN_FROM_APPDATA) extraURLsRef = Utility.settings.extraURLs;
+			else extraURLsRef = Utility.configuration.extraURLs;
+			extraURLsRef.Remove(Utility.configuration.extraURLs
 				.Find(el => el.key == e.Row.Cells[0].Value.ToString()));
+		}
+
+		private void closeAnotherCopyOfProgram_checkBox_CheckedChanged(object sender, EventArgs e) {
+			Utility.settings.closeAnotherCopyOfProgram = closeAnotherCopyOfProgram_checkBox.Checked;
+		}
+
+		private void movingInfinitePing_checkBox_CheckedChanged(object sender, EventArgs e) {
+			Utility.configuration.movingInfinitePing = movingInfinitePing_checkBox.Checked;
 		}
 	}
 }

@@ -60,18 +60,23 @@ namespace rPCSMT.src.Main {
 		}
 
 
-		public static async void pingResalt(string pcName) {
-			if (pcName != null) {
-				if (ping(pcName))
-					await Task.Run(() => {
-						MessageBox.Show("Пингуется", pcName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-					});
-				else
-					await Task.Run(() => {
-						MessageBox.Show("НЕ пингуется", pcName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-					});
-			}
+		public static async void pingResaltLegacy(string pcName) {
+			await Task.Run(() => {
+				MessageBox.Show("Пингуется", pcName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+			});
+			await Task.Run(() => {
+				MessageBox.Show("НЕ пингуется", pcName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+			});
 		}
+
+
+		public static bool pingResalt(string pcName) {
+			if (pcName != null) {
+				return ping(pcName);
+			} else
+				return false;
+		}
+
 
 		public static bool checkUserLogedIn(string username, string computerName) {
 			try {
@@ -112,18 +117,18 @@ namespace rPCSMT.src.Main {
 			return "";
 		}
 
-		public static async void getIpByHostname(string pcName) {
-			if (pcName != null)
-				if (ping(pcName)) {
-					IPAddress[] iPAddresses = Dns.GetHostAddresses(pcName);
-					foreach (IPAddress ip in iPAddresses)
-						if (ip.AddressFamily == AddressFamily.InterNetwork & iPAddresses.Length > 0) {
-							Clipboard.SetText(ip.ToString());
-							await Task.Run(() => {
-								MessageBox.Show(ip.ToString() + "\n[ скопированно ]", pcName);
-							});
-						}
-				}
+		public static async void getIpByHostname(string computerName) {
+			if (computerName != null || ping(computerName)) {
+				IPAddress[] iPAddresses = Dns.GetHostAddresses(computerName);
+				foreach (IPAddress ip in iPAddresses)
+					if (ip.AddressFamily == AddressFamily.InterNetwork & iPAddresses.Length > 0) {
+						Clipboard.SetText(ip.ToString());
+						await Task.Run(() => {
+							//MessageBox.Show(ip.ToString() + "\n[ скопированно ]", computerName);
+							AutoClosingMessageBox.Show(ip.ToString() + "\n[ скопированно ]", computerName, 5000);
+						});
+					}
+			}
 		}
 
 		public static async void openComputerInExplorer(string computerName) {
@@ -159,6 +164,17 @@ namespace rPCSMT.src.Main {
 					server.GetProcesses().First(p => p.ProcessName == processName).Kill();
 				}
 			} catch { }
+		}
+
+		public static void killAnotherCopyOfProgram() {
+			ITerminalServer server = new TerminalServicesManager().GetLocalServer();
+			server.Open();
+			var procs = server.GetProcesses().Where(
+				el => el.ProcessName.Equals("rPCSMT.exe")
+				&& Process.GetCurrentProcess().Id != el.ProcessId
+			);
+			foreach (var proc in procs)
+				proc.Kill();
 		}
 	}
 }

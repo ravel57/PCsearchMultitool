@@ -42,6 +42,11 @@ namespace rPCSMT.src.Main.Forms {
 			this.ExtraFolders_dataGridView = new System.Windows.Forms.DataGridView();
 			this.ExtraResourcesUrls_tabPage = new System.Windows.Forms.TabPage();
 			this.ExtraUrls_dataGridView = new System.Windows.Forms.DataGridView();
+			this.closeAnotherCopyOfProgram_checkBox = new System.Windows.Forms.CheckBox();
+			this.movingInfinitePing_checkBox = new System.Windows.Forms.CheckBox();
+			this.rPrinterManager_label = new System.Windows.Forms.Label();
+			this.rPrinterManager_textBox = new System.Windows.Forms.TextBox();
+			this.rPrinterManager_button = new System.Windows.Forms.Button();
 			this.ExtraResources_tabControl.SuspendLayout();
 			this.ExtraResourcesFolders_tabPage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ExtraFolders_dataGridView)).BeginInit();
@@ -142,10 +147,10 @@ namespace rPCSMT.src.Main.Forms {
 			// 
 			this.ExtraResources_tabControl.Controls.Add(this.ExtraResourcesFolders_tabPage);
 			this.ExtraResources_tabControl.Controls.Add(this.ExtraResourcesUrls_tabPage);
-			this.ExtraResources_tabControl.Location = new System.Drawing.Point(10, 142);
+			this.ExtraResources_tabControl.Location = new System.Drawing.Point(13, 191);
 			this.ExtraResources_tabControl.Name = "ExtraResources_tabControl";
 			this.ExtraResources_tabControl.SelectedIndex = 0;
-			this.ExtraResources_tabControl.Size = new System.Drawing.Size(432, 194);
+			this.ExtraResources_tabControl.Size = new System.Drawing.Size(433, 194);
 			this.ExtraResources_tabControl.TabIndex = 4;
 			// 
 			// ExtraResourcesFolders_tabPage
@@ -176,7 +181,7 @@ namespace rPCSMT.src.Main.Forms {
 			this.ExtraResourcesUrls_tabPage.Location = new System.Drawing.Point(4, 22);
 			this.ExtraResourcesUrls_tabPage.Name = "ExtraResourcesUrls_tabPage";
 			this.ExtraResourcesUrls_tabPage.Padding = new System.Windows.Forms.Padding(3);
-			this.ExtraResourcesUrls_tabPage.Size = new System.Drawing.Size(424, 168);
+			this.ExtraResourcesUrls_tabPage.Size = new System.Drawing.Size(425, 168);
 			this.ExtraResourcesUrls_tabPage.TabIndex = 1;
 			this.ExtraResourcesUrls_tabPage.Text = "Ссылки";
 			this.ExtraResourcesUrls_tabPage.UseVisualStyleBackColor = true;
@@ -192,19 +197,74 @@ namespace rPCSMT.src.Main.Forms {
 			this.ExtraUrls_dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.ExtraUrls_dataGridView_CellEndEdit);
 			this.ExtraUrls_dataGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.ExtraUrls_dataGridView_UserDeletedRow);
 			// 
+			// closeAnotherCopyOfProgram_checkBox
+			// 
+			this.closeAnotherCopyOfProgram_checkBox.AutoSize = true;
+			this.closeAnotherCopyOfProgram_checkBox.Location = new System.Drawing.Point(16, 392);
+			this.closeAnotherCopyOfProgram_checkBox.Name = "closeAnotherCopyOfProgram_checkBox";
+			this.closeAnotherCopyOfProgram_checkBox.Size = new System.Drawing.Size(339, 17);
+			this.closeAnotherCopyOfProgram_checkBox.TabIndex = 5;
+			this.closeAnotherCopyOfProgram_checkBox.Text = "Закрывать экземпляры программы при открытии по ссылке";
+			this.closeAnotherCopyOfProgram_checkBox.UseVisualStyleBackColor = true;
+			this.closeAnotherCopyOfProgram_checkBox.CheckedChanged += new System.EventHandler(this.closeAnotherCopyOfProgram_checkBox_CheckedChanged);
+			// 
+			// movingInfinitePing_checkBox
+			// 
+			this.movingInfinitePing_checkBox.AutoSize = true;
+			this.movingInfinitePing_checkBox.Location = new System.Drawing.Point(16, 416);
+			this.movingInfinitePing_checkBox.Name = "movingInfinitePing_checkBox";
+			this.movingInfinitePing_checkBox.Size = new System.Drawing.Size(117, 17);
+			this.movingInfinitePing_checkBox.TabIndex = 6;
+			this.movingInfinitePing_checkBox.Text = "Режим тараканов";
+			this.movingInfinitePing_checkBox.UseVisualStyleBackColor = true;
+			this.movingInfinitePing_checkBox.CheckedChanged += new System.EventHandler(this.movingInfinitePing_checkBox_CheckedChanged);
+			// 
+			// rPrinterManager_label
+			// 
+			this.rPrinterManager_label.AutoSize = true;
+			this.rPrinterManager_label.Location = new System.Drawing.Point(10, 145);
+			this.rPrinterManager_label.Name = "rPrinterManager_label";
+			this.rPrinterManager_label.Size = new System.Drawing.Size(118, 13);
+			this.rPrinterManager_label.TabIndex = 2;
+			this.rPrinterManager_label.Text = "Путь к rPrinterManager";
+			// 
+			// rPrinterManager_textBox
+			// 
+			this.rPrinterManager_textBox.Location = new System.Drawing.Point(13, 161);
+			this.rPrinterManager_textBox.Name = "rPrinterManager_textBox";
+			this.rPrinterManager_textBox.Size = new System.Drawing.Size(351, 20);
+			this.rPrinterManager_textBox.TabIndex = 0;
+			this.rPrinterManager_textBox.TextChanged += new System.EventHandler(this.rPrinterManager_textBox_TextChanged);
+			// 
+			// rPrinterManager_button
+			// 
+			this.rPrinterManager_button.Enabled = false;
+			this.rPrinterManager_button.Location = new System.Drawing.Point(371, 159);
+			this.rPrinterManager_button.Name = "rPrinterManager_button";
+			this.rPrinterManager_button.Size = new System.Drawing.Size(75, 23);
+			this.rPrinterManager_button.TabIndex = 3;
+			this.rPrinterManager_button.Text = "Открыть";
+			this.rPrinterManager_button.UseVisualStyleBackColor = true;
+			this.rPrinterManager_button.Click += new System.EventHandler(this.distroFolder_button_Click);
+			// 
 			// ConfigForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(454, 344);
+			this.ClientSize = new System.Drawing.Size(454, 442);
+			this.Controls.Add(this.movingInfinitePing_checkBox);
+			this.Controls.Add(this.closeAnotherCopyOfProgram_checkBox);
 			this.Controls.Add(this.ExtraResources_tabControl);
+			this.Controls.Add(this.rPrinterManager_button);
 			this.Controls.Add(this.distroFolder_button);
 			this.Controls.Add(this.setInventaryFolder_button);
 			this.Controls.Add(this.setLogsFolder_button);
+			this.Controls.Add(this.rPrinterManager_textBox);
 			this.Controls.Add(this.logs_label);
 			this.Controls.Add(this.distroPath_textBox);
 			this.Controls.Add(this.inventary_textBox);
 			this.Controls.Add(this.logs_textBox);
+			this.Controls.Add(this.rPrinterManager_label);
 			this.Controls.Add(this.inventary_label);
 			this.Controls.Add(this.distro_label);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -244,5 +304,10 @@ namespace rPCSMT.src.Main.Forms {
 		private System.Windows.Forms.DataGridView ExtraFolders_dataGridView;
 		private System.Windows.Forms.TabPage ExtraResourcesUrls_tabPage;
 		private System.Windows.Forms.DataGridView ExtraUrls_dataGridView;
+		private System.Windows.Forms.CheckBox closeAnotherCopyOfProgram_checkBox;
+		private System.Windows.Forms.CheckBox movingInfinitePing_checkBox;
+		private System.Windows.Forms.Label rPrinterManager_label;
+		private System.Windows.Forms.TextBox rPrinterManager_textBox;
+		private System.Windows.Forms.Button rPrinterManager_button;
 	}
 }

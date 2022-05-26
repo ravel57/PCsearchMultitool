@@ -180,9 +180,9 @@
 			// 
 			this.info_button.Location = new System.Drawing.Point(172, 165);
 			this.info_button.Name = "info_button";
-			this.info_button.Size = new System.Drawing.Size(156, 25);
+			this.info_button.Size = new System.Drawing.Size(93, 25);
 			this.info_button.TabIndex = 4;
-			this.info_button.Text = "           ИНФО";
+			this.info_button.Text = "ИНФО";
 			this.info_button.UseVisualStyleBackColor = true;
 			this.info_button.Click += new System.EventHandler(this.info_button_Click);
 			// 
@@ -212,12 +212,12 @@
 			// printerInfo_button
 			// 
 			this.printerInfo_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.printerInfo_button.Location = new System.Drawing.Point(332, 165);
+			this.printerInfo_button.Location = new System.Drawing.Point(266, 165);
 			this.printerInfo_button.Margin = new System.Windows.Forms.Padding(1);
 			this.printerInfo_button.Name = "printerInfo_button";
-			this.printerInfo_button.Size = new System.Drawing.Size(27, 25);
+			this.printerInfo_button.Size = new System.Drawing.Size(93, 25);
 			this.printerInfo_button.TabIndex = 5;
-			this.printerInfo_button.Text = "ПР";
+			this.printerInfo_button.Text = "ПРИНТЕРЫ";
 			this.printerInfo_button.UseVisualStyleBackColor = true;
 			this.printerInfo_button.Click += new System.EventHandler(this.printerInfo_button_Click);
 			// 

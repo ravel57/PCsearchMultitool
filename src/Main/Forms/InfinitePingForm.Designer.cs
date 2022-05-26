@@ -26,6 +26,7 @@
 			this.components = new System.ComponentModel.Container();
 			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.PingRes_label = new System.Windows.Forms.Label();
+			this.history_label = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// contextMenuStrip1
@@ -42,12 +43,21 @@
 			this.PingRes_label.TabIndex = 1;
 			this.PingRes_label.Text = "Усешно: 0\r\nОшибок: 0";
 			// 
+			// history_label
+			// 
+			this.history_label.AutoSize = true;
+			this.history_label.Location = new System.Drawing.Point(6, 30);
+			this.history_label.Name = "history_label";
+			this.history_label.Size = new System.Drawing.Size(0, 13);
+			this.history_label.TabIndex = 1;
+			// 
 			// InfinitePing_Form
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Window;
-			this.ClientSize = new System.Drawing.Size(176, 38);
+			this.ClientSize = new System.Drawing.Size(176, 47);
+			this.Controls.Add(this.history_label);
 			this.Controls.Add(this.PingRes_label);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;
@@ -63,5 +73,6 @@
 		#endregion
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
 		private System.Windows.Forms.Label PingRes_label;
+		private System.Windows.Forms.Label history_label;
 	}
 }

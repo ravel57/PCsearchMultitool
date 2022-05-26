@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using rPCSMT.src.Main;
 
 namespace rPCSMT {
 	public partial class InfinitePing_Form : Form {
@@ -28,6 +29,7 @@ namespace rPCSMT {
 			//int counter = 0;
 			int successPingCounter = 0;
 			int errorPingCounter = 0;
+			List<char> history = new List<char>();
 
 			int leftCordX = 10;
 			int rightCordX = 110;
@@ -45,8 +47,14 @@ namespace rPCSMT {
 					// Пингование 
 					try {
 						PingReply reply = ping.Send(PCname, 120, Encoding.ASCII.GetBytes("fff"), pingOptions);
-						if (reply.Status == IPStatus.Success) successPingCounter++;
-						else errorPingCounter++;
+						if (reply.Status == IPStatus.Success) {
+							successPingCounter++;
+							history.Add('+');
+						} else {
+							errorPingCounter++;
+							history.Add('-');
+						}
+						if (history.Count > 17) history.RemoveAt(0);
 					} catch (System.Net.NetworkInformation.PingException) {
 						MessageBox.Show("НЕ пингуется", @"¯\_(ツ)_/¯", MessageBoxButtons.OK, MessageBoxIcon.Error);
 						Close();
@@ -54,17 +62,22 @@ namespace rPCSMT {
 					//});
 					// Двиганье
 					PingRes_label.Text = $"Усешно: {successPingCounter}\nОшибок: {errorPingCounter}";
-					for (int z = 0; z < 50; z++) {
-						if (way) {
-							PingRes_label.Location = new Point(textCord++, PingRes_label.Location.Y);
-							this.Location = new Point(this.Location.X - 1, this.Location.Y);
-						} else {
-							PingRes_label.Location = new Point(textCord--, PingRes_label.Location.Y);
-							this.Location = new Point(this.Location.X + 1, this.Location.Y);
+					history_label.Text = String.Join(" ", history.ToArray());
+					if (Utility.configuration.movingInfinitePing) {
+						for (int z = 0; z < 50; z++) {
+							if (way) {
+								PingRes_label.Location = new Point(textCord++, PingRes_label.Location.Y);
+								this.Location = new Point(this.Location.X - 1, this.Location.Y);
+							} else {
+								PingRes_label.Location = new Point(textCord--, PingRes_label.Location.Y);
+								this.Location = new Point(this.Location.X + 1, this.Location.Y);
+							}
+							await Task.Delay(2);
 						}
-						await Task.Delay(2);
+					} else {
+						PingRes_label.Location = new Point(10, PingRes_label.Location.Y);
+						await Task.Delay(1000);
 					}
-
 				}
 				if (way) endCord = leftCordX;
 				else endCord = rightCordX;
