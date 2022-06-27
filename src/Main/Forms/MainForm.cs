@@ -27,58 +27,55 @@ namespace rPCSMT {
 
 		//on load
 		private async void MainForm_Load(object sender, EventArgs e) {
-			if (Directory.GetCurrentDirectory() != Utility.APPDATA_PATH & Utility.RUN_FROM_APPDATA) {
-				Utility.startFromAppdata();
-			} else {
-				// load settings
-				Utility.initializeSettings();
+			// load settings
+			Utility.initialize();
 
-				//window position 
-				this.Location = Utility.settings.windowCord;
+			//window position 
+			this.Location = Utility.settings.windowCord;
 
-				//redraw listbox to select active computer
-				this.parsedEntitiesNames_listBox.DrawMode = DrawMode.OwnerDrawVariable;
-				this.parsedEntitiesNames_listBox.MeasureItem += new MeasureItemEventHandler(PCs_listBox_MeasureItem);
-				this.parsedEntitiesNames_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
+			//redraw listbox to select active computer
+			this.parsedEntitiesNames_listBox.DrawMode = DrawMode.OwnerDrawVariable;
+			this.parsedEntitiesNames_listBox.MeasureItem += new MeasureItemEventHandler(PCs_listBox_MeasureItem);
+			this.parsedEntitiesNames_listBox.DrawItem += new DrawItemEventHandler(PCs_listBox_DrawItem);
 
-				// enable buttons and version textbox
-				this.openAsist_button.Enabled = false;
-				this.openRDP_button.Enabled = false;
-				this.info_button.Enabled = false;
-				this.printerInfo_button.Enabled = false;
-				this.copy_button.Enabled = false;
-				this.ping_button.Enabled = false;
-				this.infinitePing_button.Enabled = false;
-				this.ip_button.Enabled = false;
-				this.version_textBox.Text = Utility.VERSION;
+			// enable buttons and version textbox
+			this.openAsist_button.Enabled = false;
+			this.openRDP_button.Enabled = false;
+			this.info_button.Enabled = false;
+			this.printerInfo_button.Enabled = false;
+			this.copy_button.Enabled = false;
+			this.ping_button.Enabled = false;
+			this.infinitePing_button.Enabled = false;
+			this.ip_button.Enabled = false;
+			this.version_textBox.Text = Utility.VERSION;
 
-				// adding items to extra menu
-				updateExtraContextMenuStripItems();
+			// adding items to extra menu
+			updateExtraContextMenuStripItems();
 
-				// update log folders and set input parameter string
-				LogsFoldersSearchResalts.updateSearchResalts();
-				if (Utility.inputString != string.Empty) {
-					this.userName_comboBox.Text = Utility.inputString;
-					this.userName_comboBox_TextChanged(new object(), new EventArgs());
-					if (this.userName_comboBox.Items.Count > 0 && this.userName_comboBox.SelectedIndex <= -1) {
-						this.userName_comboBox.SelectedIndex = 0;
-						this.userName_comboBox.DroppedDown = false;
-						this.parsedEntitiesNames_listBox.Focus();
-					}
-					if (Utility.settings.closeAnotherCopyOfProgram) {
-						AdminTools.killAnotherCopyOfProgram();
-					}
+			// update log folders and set input parameter string
+			LogsFoldersSearchResalts.updateSearchResalts();
+			if (Utility.inputString != string.Empty) {
+				this.userName_comboBox.Text = Utility.inputString;
+				this.userName_comboBox_TextChanged(new object(), new EventArgs());
+				if (this.userName_comboBox.Items.Count > 0 && this.userName_comboBox.SelectedIndex <= -1) {
+					this.userName_comboBox.SelectedIndex = 0;
+					this.userName_comboBox.DroppedDown = false;
+					this.parsedEntitiesNames_listBox.Focus();
 				}
-
-				// starting updating for log folder
-				await Task.Run(async () => {
-					while (true) {
-						await Task.Delay(TimeSpan.FromSeconds(60));
-						LogsFoldersSearchResalts.updateSearchResalts();
-						this.parsedEntitiesNames_listBox_SelectedIndexChanged(sender, e);
-					}
-				});
+				if (Utility.settings.closeAnotherCopyOfProgram) {
+					AdminTools.killAnotherCopyOfProgram();
+				}
 			}
+
+			// starting updating for log folder
+			await Task.Run(async () => {
+				while (true) {
+					await Task.Delay(TimeSpan.FromSeconds(60));
+					LogsFoldersSearchResalts.updateSearchResalts();
+					this.parsedEntitiesNames_listBox_SelectedIndexChanged(sender, e);
+				}
+			});
+
 		}
 
 
@@ -137,7 +134,7 @@ namespace rPCSMT {
 
 		private void userName_comboBox_TextChanged(object sender, EventArgs e) {
 			//this.userName_comboBox.DataSource = userNameVariants;
-			if (userName_comboBox.Text.StartsWith("\u007f")) 
+			if (userName_comboBox.Text.StartsWith("\u007f"))
 				userName_comboBox.Text = userName_comboBox.Text.Replace("\u007f", "");
 			if (userName_comboBox.Text.Length > 0 /* | userNameVariants.Length > 0*/) {
 				this.openAsist_button.Enabled = true;
@@ -440,11 +437,11 @@ namespace rPCSMT {
 			this.extra_contextMenuStrip.Items.Clear();
 			this.extra_contextMenuStrip.Items.Add("Закрыть ассистента");
 			this.extra_contextMenuStrip.Items.Add("Диспечер задач");
-			extra_contextMenuStrip.Items.Add(new ToolStripSeparator());
+			this.extra_contextMenuStrip.Items.Add(new ToolStripSeparator());
 			this.extra_contextMenuStrip.Items.Add("Поиск по выбраному элементу");
-			extra_contextMenuStrip.Items.Add(new ToolStripSeparator());
+			this.extra_contextMenuStrip.Items.Add(new ToolStripSeparator());
 			this.extra_contextMenuStrip.Items.Add("Настройки");
-			extra_contextMenuStrip.Items.Add(new ToolStripSeparator());
+			this.extra_contextMenuStrip.Items.Add(new ToolStripSeparator());
 			this.extra_contextMenuStrip.Items.Add("Distro");
 			foreach (var el in Utility.configuration.extraFolders)
 				this.extra_contextMenuStrip.Items.Add(el.key);

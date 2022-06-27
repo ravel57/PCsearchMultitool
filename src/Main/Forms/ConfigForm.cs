@@ -33,7 +33,8 @@ namespace rPCSMT.src.Main.Forms {
 			inventary_textBox.Text = Utility.configuration.inventoryPath;
 			distroPath_textBox.Text = Utility.configuration.distroPath;
 			rPrinterManager_textBox.Text = Utility.configuration.rPrinterManagerPath;
-			movingInfinitePing_checkBox.Checked = Utility.configuration.movingInfinitePing;
+			soursePath_textBox.Text = Utility.configuration.sourcePath;
+			movingInfinitePing_checkBox.Checked = Utility.settings.movingInfinitePing;
 
 			setValuesToDataGridView();
 
@@ -154,7 +155,21 @@ namespace rPCSMT.src.Main.Forms {
 		}
 
 		private void rPrinterManager_textBox_TextChanged(object sender, EventArgs e) {
-			Utility.configuration.rPrinterManagerPath = rPrinterManager_textBox.Text;
+			string path = rPrinterManager_textBox.Text;
+			if (File.Exists(path))
+				Utility.configuration.rPrinterManagerPath = path;
+			else {
+				if (!path.EndsWith("\\")) 
+					path += "\\";
+				if (Directory.Exists(path) && File.Exists(path + "rPrinterManager.exe")) {
+					Utility.configuration.rPrinterManagerPath = path + "rPrinterManager.exe";
+					rPrinterManager_textBox.Text = path + "rPrinterManager.exe";
+				}
+			}
+		}
+
+		private void soursePath_textBox_TextChanged(object sender, EventArgs e) {
+			Utility.configuration.sourcePath = soursePath_textBox.Text;
 		}
 
 
@@ -175,12 +190,8 @@ namespace rPCSMT.src.Main.Forms {
 				.Find(el => el.key == e.Row.Cells[0].Value.ToString()));
 		}
 
-		private void closeAnotherCopyOfProgram_checkBox_CheckedChanged(object sender, EventArgs e) {
-			Utility.settings.closeAnotherCopyOfProgram = closeAnotherCopyOfProgram_checkBox.Checked;
-		}
-
 		private void movingInfinitePing_checkBox_CheckedChanged(object sender, EventArgs e) {
-			Utility.configuration.movingInfinitePing = movingInfinitePing_checkBox.Checked;
+			Utility.settings.movingInfinitePing = movingInfinitePing_checkBox.Checked;
 		}
 	}
 }

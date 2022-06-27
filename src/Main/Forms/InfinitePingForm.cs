@@ -63,7 +63,7 @@ namespace rPCSMT {
 					// Двиганье
 					PingRes_label.Text = $"Усешно: {successPingCounter}\nОшибок: {errorPingCounter}";
 					history_label.Text = String.Join(" ", history.ToArray());
-					if (Utility.configuration.movingInfinitePing) {
+					if (Utility.settings.movingInfinitePing) {
 						for (int z = 0; z < 50; z++) {
 							if (way) {
 								PingRes_label.Location = new Point(textCord++, PingRes_label.Location.Y);

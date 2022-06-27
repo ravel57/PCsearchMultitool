@@ -47,6 +47,9 @@ namespace rPCSMT.src.Main.Forms {
 			this.rPrinterManager_label = new System.Windows.Forms.Label();
 			this.rPrinterManager_textBox = new System.Windows.Forms.TextBox();
 			this.rPrinterManager_button = new System.Windows.Forms.Button();
+			this.soursePath_label = new System.Windows.Forms.Label();
+			this.soursePath_textBox = new System.Windows.Forms.TextBox();
+			this.soursePath_button = new System.Windows.Forms.Button();
 			this.ExtraResources_tabControl.SuspendLayout();
 			this.ExtraResourcesFolders_tabPage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ExtraFolders_dataGridView)).BeginInit();
@@ -147,7 +150,7 @@ namespace rPCSMT.src.Main.Forms {
 			// 
 			this.ExtraResources_tabControl.Controls.Add(this.ExtraResourcesFolders_tabPage);
 			this.ExtraResources_tabControl.Controls.Add(this.ExtraResourcesUrls_tabPage);
-			this.ExtraResources_tabControl.Location = new System.Drawing.Point(13, 191);
+			this.ExtraResources_tabControl.Location = new System.Drawing.Point(13, 237);
 			this.ExtraResources_tabControl.Name = "ExtraResources_tabControl";
 			this.ExtraResources_tabControl.SelectedIndex = 0;
 			this.ExtraResources_tabControl.Size = new System.Drawing.Size(433, 194);
@@ -159,7 +162,7 @@ namespace rPCSMT.src.Main.Forms {
 			this.ExtraResourcesFolders_tabPage.Location = new System.Drawing.Point(4, 22);
 			this.ExtraResourcesFolders_tabPage.Name = "ExtraResourcesFolders_tabPage";
 			this.ExtraResourcesFolders_tabPage.Padding = new System.Windows.Forms.Padding(3);
-			this.ExtraResourcesFolders_tabPage.Size = new System.Drawing.Size(424, 168);
+			this.ExtraResourcesFolders_tabPage.Size = new System.Drawing.Size(425, 168);
 			this.ExtraResourcesFolders_tabPage.TabIndex = 0;
 			this.ExtraResourcesFolders_tabPage.Text = "Папки";
 			this.ExtraResourcesFolders_tabPage.UseVisualStyleBackColor = true;
@@ -200,18 +203,17 @@ namespace rPCSMT.src.Main.Forms {
 			// closeAnotherCopyOfProgram_checkBox
 			// 
 			this.closeAnotherCopyOfProgram_checkBox.AutoSize = true;
-			this.closeAnotherCopyOfProgram_checkBox.Location = new System.Drawing.Point(16, 392);
+			this.closeAnotherCopyOfProgram_checkBox.Location = new System.Drawing.Point(16, 433);
 			this.closeAnotherCopyOfProgram_checkBox.Name = "closeAnotherCopyOfProgram_checkBox";
 			this.closeAnotherCopyOfProgram_checkBox.Size = new System.Drawing.Size(339, 17);
 			this.closeAnotherCopyOfProgram_checkBox.TabIndex = 5;
 			this.closeAnotherCopyOfProgram_checkBox.Text = "Закрывать экземпляры программы при открытии по ссылке";
 			this.closeAnotherCopyOfProgram_checkBox.UseVisualStyleBackColor = true;
-			this.closeAnotherCopyOfProgram_checkBox.CheckedChanged += new System.EventHandler(this.closeAnotherCopyOfProgram_checkBox_CheckedChanged);
 			// 
 			// movingInfinitePing_checkBox
 			// 
 			this.movingInfinitePing_checkBox.AutoSize = true;
-			this.movingInfinitePing_checkBox.Location = new System.Drawing.Point(16, 416);
+			this.movingInfinitePing_checkBox.Location = new System.Drawing.Point(16, 457);
 			this.movingInfinitePing_checkBox.Name = "movingInfinitePing_checkBox";
 			this.movingInfinitePing_checkBox.Size = new System.Drawing.Size(117, 17);
 			this.movingInfinitePing_checkBox.TabIndex = 6;
@@ -247,22 +249,54 @@ namespace rPCSMT.src.Main.Forms {
 			this.rPrinterManager_button.UseVisualStyleBackColor = true;
 			this.rPrinterManager_button.Click += new System.EventHandler(this.distroFolder_button_Click);
 			// 
+			// soursePath_label
+			// 
+			this.soursePath_label.AutoSize = true;
+			this.soursePath_label.Location = new System.Drawing.Point(10, 192);
+			this.soursePath_label.Name = "soursePath_label";
+			this.soursePath_label.Size = new System.Drawing.Size(137, 13);
+			this.soursePath_label.TabIndex = 2;
+			this.soursePath_label.Text = "Путь к источнику rPCSMT";
+			// 
+			// soursePath_textBox
+			// 
+			this.soursePath_textBox.Location = new System.Drawing.Point(13, 208);
+			this.soursePath_textBox.Name = "soursePath_textBox";
+			this.soursePath_textBox.ReadOnly = true;
+			this.soursePath_textBox.Size = new System.Drawing.Size(351, 20);
+			this.soursePath_textBox.TabIndex = 0;
+			this.soursePath_textBox.TextChanged += new System.EventHandler(this.soursePath_textBox_TextChanged);
+			// 
+			// soursePath_button
+			// 
+			this.soursePath_button.Enabled = false;
+			this.soursePath_button.Location = new System.Drawing.Point(371, 206);
+			this.soursePath_button.Name = "soursePath_button";
+			this.soursePath_button.Size = new System.Drawing.Size(75, 23);
+			this.soursePath_button.TabIndex = 3;
+			this.soursePath_button.Text = "Открыть";
+			this.soursePath_button.UseVisualStyleBackColor = true;
+			this.soursePath_button.Click += new System.EventHandler(this.distroFolder_button_Click);
+			// 
 			// ConfigForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(454, 442);
+			this.ClientSize = new System.Drawing.Size(454, 480);
 			this.Controls.Add(this.movingInfinitePing_checkBox);
 			this.Controls.Add(this.closeAnotherCopyOfProgram_checkBox);
 			this.Controls.Add(this.ExtraResources_tabControl);
+			this.Controls.Add(this.soursePath_button);
 			this.Controls.Add(this.rPrinterManager_button);
 			this.Controls.Add(this.distroFolder_button);
 			this.Controls.Add(this.setInventaryFolder_button);
+			this.Controls.Add(this.soursePath_textBox);
 			this.Controls.Add(this.setLogsFolder_button);
 			this.Controls.Add(this.rPrinterManager_textBox);
 			this.Controls.Add(this.logs_label);
 			this.Controls.Add(this.distroPath_textBox);
 			this.Controls.Add(this.inventary_textBox);
+			this.Controls.Add(this.soursePath_label);
 			this.Controls.Add(this.logs_textBox);
 			this.Controls.Add(this.rPrinterManager_label);
 			this.Controls.Add(this.inventary_label);
@@ -309,5 +343,8 @@ namespace rPCSMT.src.Main.Forms {
 		private System.Windows.Forms.Label rPrinterManager_label;
 		private System.Windows.Forms.TextBox rPrinterManager_textBox;
 		private System.Windows.Forms.Button rPrinterManager_button;
+		private System.Windows.Forms.Label soursePath_label;
+		private System.Windows.Forms.TextBox soursePath_textBox;
+		private System.Windows.Forms.Button soursePath_button;
 	}
 }
